@@ -151,6 +151,7 @@ button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
   <div id="side">
     <button class="sb" id="bAuto">自動<small>Z 掛機</small></button>
     <button class="sb" id="bBag">背包<small>B</small></button>
+    <button class="sb" id="bChar">修煉<small>C</small></button>
     <button class="sb" id="bTown">回城<small>T</small></button>
   </div>
   <div id="toast"></div>
@@ -172,7 +173,7 @@ button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
   </div>
   <div class="help">
     滑鼠點擊 / 手指拖曳 移動　·　點怪物自動攻擊　·　WASD / 方向鍵 也能移動<br>
-    1 2 3 施放技能　·　Q 紅藥　E 藍藥　·　Z 自動掛機　·　B 背包　·　T 回城<br>
+    1 2 3 施放技能　·　Q 紅藥　E 藍藥　·　Z 自動掛機　·　B 背包　·　C 修煉　·　T 回城<br>
     角色外觀會隨身上的裝備改變　·　進度會自動存在瀏覽器中
   </div>
 </div>
@@ -244,6 +245,32 @@ const MT = {
   imp:      {name:'火焰小鬼',   lv:18, hp:380,  atk:34, def:9,  exp:110,  gold:[12,26],   spd:80, size:16, h:52,  draw:'imp', color:'#e8452c'},
   golem:    {name:'熔岩石魔',   lv:22, hp:680,  atk:46, def:15, exp:185,  gold:[18,36],   spd:45, size:24, h:74,  draw:'golem', color:'#6b5a4e'},
   boss:     {name:'炎魔君主',   lv:28, hp:7000, atk:85, def:22, exp:3000, gold:[400,800], spd:55, size:40, h:130, draw:'boss', color:'#b3261e', elite:true, boss:true, respawn:120},
+  // 冰封雪原
+  frostwolf:  {name:'霜牙狼',   lv:26, hp:750,  atk:58,  def:18, exp:240,  gold:[22,40],   spd:90, size:20, h:48,  draw:'wolf', color:'#a8b8c8'},
+  yeti:       {name:'雪原巨猿', lv:29, hp:1000, atk:66,  def:22, exp:320,  gold:[26,48],   spd:55, size:24, h:80,  draw:'yeti', color:'#e8eef4'},
+  icegolem:   {name:'寒冰石魔', lv:31, hp:1250, atk:70,  def:28, exp:380,  gold:[30,55],   spd:45, size:24, h:74,  draw:'golem', color:'#6a8098', glow:'#8ae0ff'},
+  frostqueen: {name:'冰霜女王', lv:33, hp:10000, atk:100, def:30, exp:4500, gold:[600,1000], spd:60, size:24, h:150, draw:'hero', scale:1.55, elite:true, respawn:90, ranged:240, pc:'#8ae0ff', fx:'#8ae0ff', color:'#bfe6ff',
+    look:{gender:'female', style:'robe', outfit:{main:'#bfe6ff', trim:'#ffffff'}, cloak:'#3a6a98', skin:'#dfe8f0', hairCol:'#f0f8ff', hairStyle:'long', armor:-1, helmet:6, boots:-1, weapon:{type:'staff', tier:3, q:3}, aura:'#8ae0ff'}},
+  // 亡者墓地
+  zombie:     {name:'腐屍',     lv:34, hp:1400, atk:80,  def:30, exp:450,  gold:[34,60],   spd:40, size:18, h:100, draw:'hero', color:'#6a7a50',
+    look:{gender:'male', style:'leather', outfit:{main:'#4a4a3a', trim:'#2a2a20'}, cloak:null, skin:'#8aa070', pants:'#3a3428', hairCol:'#2a2a20', hairStyle:'short', armor:-1, helmet:-1, boots:-1, weapon:null}},
+  ghost:      {name:'怨靈',     lv:36, hp:1150, atk:88,  def:26, exp:480,  gold:[36,64],   spd:85, size:16, h:70,  draw:'ghost', color:'#9ab8c0'},
+  skelmage:   {name:'骷髏法師', lv:38, hp:1250, atk:92,  def:30, exp:520,  gold:[38,68],   spd:55, size:18, h:100, draw:'hero', ranged:230, pc:'#9cff5a', color:'#ddd6c0',
+    look:{gender:'male', style:'bone', outfit:{main:'#ddd6c0', trim:'#8a8478'}, armor:-1, helmet:-1, boots:-1, weapon:{type:'staff', tier:4, q:0}}},
+  necro:      {name:'死靈領主', lv:41, hp:18000, atk:140, def:40, exp:9000, gold:[1200,2000], spd:55, size:30, h:180, draw:'hero', scale:1.85, elite:true, boss:true, respawn:150, fx:'#7aff7a', color:'#3a4a3a',
+    look:{gender:'male', style:'plate', outfit:{main:'#1a1a1e', trim:'#7aff7a'}, cloak:'#0e1a0e', skin:'#9aa0a8', hairCol:'#e8e8e8', hairStyle:'mid', armor:8, helmet:4, boots:8, weapon:{type:'sword', tier:8, q:4}, aura:'#7aff7a'}},
+  // 沙漠遺跡
+  scorpion:   {name:'沙漠巨蠍', lv:42, hp:1800, atk:110, def:42, exp:640,  gold:[44,76],   spd:70, size:22, h:56,  draw:'scorpion', color:'#b8742a'},
+  mummy:      {name:'古墓木乃伊', lv:45, hp:2200, atk:122, def:48, exp:720, gold:[48,84],   spd:45, size:18, h:100, draw:'hero', color:'#c8b890',
+    look:{gender:'male', style:'robe', outfit:{main:'#c8b890', trim:'#8a7a50'}, cloak:null, skin:'#b8a880', hairCol:'#c8b890', hairStyle:'short', armor:-1, helmet:0, boots:-1, weapon:null}},
+  sandworm:   {name:'沙蟲之王', lv:49, hp:26000, atk:180, def:55, exp:14000, gold:[1800,3000], spd:30, size:40, h:160, draw:'worm', color:'#a8784a', elite:true, boss:true, respawn:150, fx:'#ffcf40'},
+  // 龍之巢穴
+  dragonkin:  {name:'龍人戰士', lv:50, hp:2800, atk:150, def:60, exp:900,  gold:[55,95],   spd:65, size:18, h:110, draw:'hero', scale:1.12, color:'#4a7a5a',
+    look:{gender:'male', style:'plate', outfit:{main:'#1e4a46', trim:'#7fe0c8'}, skin:'#6a8a5a', hairCol:'#1a1a1a', hairStyle:'short', armor:5, helmet:5, boots:5, weapon:{type:'sword', tier:5, q:2}}},
+  drake:      {name:'赤焰幼龍', lv:53, hp:3200, atk:165, def:62, exp:1000, gold:[60,105],  spd:70, size:26, h:74,  draw:'drake', color:'#a8321e', ranged:220, pc:'#ff7a2a'},
+  blackdragon:{name:'遠古黑龍', lv:60, hp:45000, atk:240, def:75, exp:30000, gold:[4000,7000], spd:50, size:56, h:190, draw:'drake', scale:2.6, color:'#3a3038', elite:true, boss:true, respawn:180, fx:'#ff3a2a', ranged:260, pc:'#ff4a2a'},
+  // 隨機事件
+  goblin:     {name:'寶藏哥布林', lv:1, hp:100, atk:0, def:5, exp:60, gold:[5,10], spd:125, size:15, h:48, draw:'goblin', color:'#6a8a3a', flee:true, passive:true},
 };
 const MAPS = {
   village: {name:'晨曦村', w:32, h:24, theme:'village', safe:true, lvTxt:'安全區',
@@ -252,6 +279,8 @@ const MAPS = {
       {id:'elder', name:'村長·老莫', x:13, y:9.6, look:{gender:'male', style:'robe', outfit:{main:'#4a3e34', trim:'#c9a24a'}, cloak:'#2e2620', hairCol:'#cfcfcf', hairStyle:'mid', beard:true, armor:-1, helmet:-1, boots:-1, weapon:{type:'staff', tier:0, q:0}}},
       {id:'smith', name:'鐵匠·阿鋼', x:19.5, y:9.6, look:{gender:'male', style:'leather', outfit:{main:'#4a3020', trim:'#8a6a4a'}, cloak:null, hairCol:'#1a1612', hairStyle:'short', beard:true, armor:-1, helmet:0, boots:1, weapon:{type:'hammer'}}},
       {id:'shop',  name:'雜貨商·小鈴', x:13, y:15, look:{gender:'female', style:'leather', outfit:{main:'#6a2a3a', trim:'#e8c870'}, cloak:null, hairCol:'#4a2416', hairStyle:'pony', armor:-1, helmet:-1, boots:0, weapon:null}},
+      {id:'bounty', name:'懸賞官·鐵鷹', x:16, y:8.4, look:{gender:'male', style:'leather', outfit:{main:'#3a2e24', trim:'#a07040'}, cloak:'#2a2420', hairCol:'#3a2a1e', hairStyle:'short', beard:true, armor:-1, helmet:1, boots:1, weapon:{type:'bow', tier:2, q:0}}},
+      {id:'tower', name:'試煉守衛·雷恩', x:16, y:16.4, look:{gender:'male', style:'plate', outfit:{main:'#3a3a44', trim:'#c9a24a'}, hairCol:'#2a2018', hairStyle:'short', armor:3, helmet:3, boots:3, weapon:{type:'sword', tier:3, q:2}}},
       {id:'tele',  name:'傳送師·星語', x:19.5, y:15, look:{gender:'female', style:'robe', outfit:{main:'#1e2250', trim:'#9fe8ff'}, cloak:'#141638', hairCol:'#e0e4ff', hairStyle:'long', armor:-1, helmet:-1, boots:-1, weapon:{type:'staff', tier:3, q:3}}},
     ], monsters:[]},
   forest: {name:'綠野森林', w:52, h:40, theme:'forest', lvTxt:'Lv 1-9',
@@ -260,15 +289,34 @@ const MAPS = {
   cave: {name:'幽暗洞窟', w:46, h:30, theme:'cave', lvTxt:'Lv 10-17',
     portals:[{x:1.2, y:15, to:'forest', tx:48.5, ty:20, label:'綠野森林'}, {x:44.8, y:15, to:'lava', tx:3, ty:18, label:'熔岩魔域'}],
     monsters:[['bat',15,0.1,0.6],['skeleton',15,0.4,0.9],['spider',1,0.78,0.86]]},
-  lava: {name:'熔岩魔域', w:50, h:36, theme:'lava', lvTxt:'Lv 18+',
-    portals:[{x:1.2, y:18, to:'cave', tx:42.5, ty:15, label:'幽暗洞窟'}],
+  lava: {name:'熔岩魔域', w:50, h:36, theme:'lava', lvTxt:'Lv 18-28',
+    portals:[{x:1.2, y:18, to:'cave', tx:42.5, ty:15, label:'幽暗洞窟'}, {x:48.8, y:4, to:'snow', tx:3, ty:17, label:'冰封雪原'}],
     monsters:[['imp',15,0.1,0.6],['golem',12,0.45,0.8],['boss',1,0.86,0.9]]},
+  snow: {name:'冰封雪原', w:48, h:34, theme:'snow', lvTxt:'Lv 26-33', altar:'#8ae0ff',
+    portals:[{x:1.2, y:17, to:'lava', tx:46.5, ty:4.5, label:'熔岩魔域'}, {x:46.8, y:4, to:'grave', tx:3, ty:17, label:'亡者墓地'}],
+    monsters:[['frostwolf',14,0.08,0.55],['yeti',11,0.35,0.78],['icegolem',9,0.55,0.9],['frostqueen',1,0.84,0.88]]},
+  grave: {name:'亡者墓地', w:48, h:34, theme:'grave', lvTxt:'Lv 34-41', altar:'#7aff7a',
+    portals:[{x:1.2, y:17, to:'snow', tx:44.5, ty:4.5, label:'冰封雪原'}, {x:46.8, y:4, to:'desert', tx:3, ty:17, label:'沙漠遺跡'}],
+    monsters:[['zombie',14,0.08,0.55],['ghost',12,0.3,0.75],['skelmage',10,0.5,0.9],['necro',1,0.84,0.88]]},
+  desert: {name:'沙漠遺跡', w:52, h:34, theme:'desert', lvTxt:'Lv 42-49', altar:'#ffcf40',
+    portals:[{x:1.2, y:17, to:'grave', tx:44.5, ty:4.5, label:'亡者墓地'}, {x:50.8, y:4, to:'lair', tx:3, ty:18, label:'龍之巢穴'}],
+    monsters:[['scorpion',15,0.08,0.6],['mummy',14,0.4,0.9],['sandworm',1,0.84,0.88]]},
+  lair: {name:'龍之巢穴', w:50, h:36, theme:'lair', lvTxt:'Lv 50-60', altar:'#ff3a2a',
+    portals:[{x:1.2, y:18, to:'desert', tx:48.5, ty:4.5, label:'沙漠遺跡'}],
+    monsters:[['dragonkin',14,0.08,0.6],['drake',11,0.4,0.85],['blackdragon',1,0.86,0.9]]},
+  tower: {name:'試煉之塔', w:22, h:16, theme:'tower', instance:true, lvTxt:'挑戰副本',
+    portals:[{x:11, y:15.1, to:'village', tx:16, ty:17.8, label:'離開試煉'}], monsters:[]},
 };
 const THEMES = {
   village: {bg:'#2e3e28', ground:['#4c6440','#506843','#48603c','#546c46'], dark:0.3},
   forest:  {bg:'#1e2c1a', ground:['#34482c','#384c2f','#30442a','#3c5032'], dark:0.48},
   cave:    {bg:'#15131b', ground:['#3b3743','#3f3b48','#37333f','#423e4b'], dark:0.58},
   lava:    {bg:'#1a0f0c', ground:['#3a2a25','#3f2d27','#352621','#44302a'], dark:0.36},
+  snow:    {bg:'#8a9cae', ground:['#d4dce5','#d9e1e9','#ced7e0','#dee5ec'], dark:0.28},
+  grave:   {bg:'#141612', ground:['#2a2e27','#2e322a','#272a24','#32362d'], dark:0.56},
+  desert:  {bg:'#7a5a2e', ground:['#c4a066','#c8a46a','#be9a60','#ccaa70'], dark:0.2},
+  lair:    {bg:'#120a0a', ground:['#2a1616','#2e1818','#261414','#321a1a'], dark:0.44},
+  tower:   {bg:'#0e0e14', ground:['#1e1e26','#20202a','#1c1c24','#22222c'], dark:0.38},
 };
 const QUESTS = [
   {t:'清剿軟泥', d:'村外的毒液軟泥越來越多了，去「綠野森林」消滅 10 隻吧！', m:'slime', n:10, gold:100, exp:80, item:{slot:'weapon', lv:4, q:1}},
@@ -277,7 +325,15 @@ const QUESTS = [
   {t:'洞窟探險', d:'幽暗洞窟傳出陣陣骨頭碰撞聲，擊敗 15 隻骷髏兵。', m:'skeleton', n:15, gold:800, exp:2600, item:{slot:'helmet', lv:14, q:2}},
   {t:'蛛后之巢', d:'洞窟最深處的「洞穴蛛后」是一切的元兇，擊敗她！', m:'spider', n:1, gold:1500, exp:4500, item:{slot:'ring', lv:16, q:3}},
   {t:'熔岩試煉', d:'熔岩魔域的火焰小鬼蠢蠢欲動，擊敗 20 隻。', m:'imp', n:20, gold:2000, exp:9000, item:{slot:'weapon', lv:20, q:3}},
-  {t:'終焉之炎', d:'炎魔君主即將甦醒！前往熔岩魔域最深處擊敗他，成為真正的英雄！', m:'boss', n:1, gold:10000, exp:30000, item:{slot:'weapon', lv:30, q:4}},
+  {t:'終焉之炎', d:'炎魔君主即將甦醒！前往熔岩魔域最深處擊敗他！', m:'boss', n:1, gold:10000, exp:30000, item:{slot:'weapon', lv:30, q:4}},
+  {t:'雪原狼嚎', d:'熔岩魔域東北方的「冰封雪原」，霜牙狼群襲擊了商隊，討伐 20 隻霜牙狼。', m:'frostwolf', n:20, gold:4000, exp:12000, item:{slot:'boots', lv:28, q:3}},
+  {t:'冰霜女王', d:'雪原深處的冰霜女王凍結了整片大地，擊敗她！', m:'frostqueen', n:1, gold:6000, exp:16000, item:{slot:'helmet', lv:33, q:3}},
+  {t:'亡者復甦', d:'「亡者墓地」的腐屍開始遊蕩，擊敗 20 隻腐屍。', m:'zombie', n:20, gold:7000, exp:18000},
+  {t:'死靈領主', d:'操控亡者的死靈領主就在墓地盡頭，消滅他！', m:'necro', n:1, gold:10000, exp:24000, item:{slot:'armor', lv:41, q:3}},
+  {t:'沙海毒蠍', d:'「沙漠遺跡」的巨蠍阻斷了商路，擊敗 20 隻沙漠巨蠍。', m:'scorpion', n:20, gold:12000, exp:27000},
+  {t:'沙蟲之王', d:'遺跡下沉睡的沙蟲之王甦醒了，擊敗牠！', m:'sandworm', n:1, gold:16000, exp:33000, item:{slot:'ring', lv:49, q:4}},
+  {t:'龍人入侵', d:'「龍之巢穴」的龍人戰士正在集結，擊敗 20 隻。', m:'dragonkin', n:20, gold:20000, exp:35000},
+  {t:'遠古之龍', d:'一切戰火的源頭，遠古黑龍就在巢穴深處。擊敗牠，成為真正的英雄！', m:'blackdragon', n:1, gold:50000, exp:50000, item:{slot:'weapon', lv:60, q:4}},
 ];
 const SLOTS = {weapon:'武器', helmet:'頭盔', armor:'衣甲', boots:'鞋子', ring:'戒指'};
 const SLOT_ORDER = ['weapon','helmet','armor','boots','ring'];
@@ -285,15 +341,15 @@ const QN = ['普通','優秀','精良','史詩','傳說'];
 const QC = ['#e8e8e8','#5fd35f','#4fa3ff','#c071ff','#ff9f1c'];
 const QM = [1, 1.3, 1.7, 2.2, 3];
 const WNAMES = {
-  sword:['木劍','鐵劍','精鋼劍','寒霜劍','烈焰劍','龍吟劍','天命神劍'],
-  mage:['木杖','骨杖','水晶杖','星辰杖','炎魂杖','龍心杖','天命法杖'],
-  ranger:['短弓','獵弓','長弓','風語弓','赤焰弓','龍筋弓','天命神弓'],
+  sword:['木劍','鐵劍','精鋼劍','寒霜劍','烈焰劍','龍吟劍','天命神劍','星隕劍','龍神劍'],
+  mage:['木杖','骨杖','水晶杖','星辰杖','炎魂杖','龍心杖','天命法杖','星隕杖','龍神杖'],
+  ranger:['短弓','獵弓','長弓','風語弓','赤焰弓','龍筋弓','天命神弓','星隕弓','龍神弓'],
 };
 const NAMES = {
-  armor:['布衣','皮甲','鎖子甲','精鋼甲','炎紋甲','龍鱗甲','天命戰甲'],
-  helmet:['布帽','皮盔','鐵盔','精鋼盔','炎紋盔','龍鱗盔','天命頭冠'],
-  boots:['草鞋','皮靴','鐵靴','疾風靴','炎紋靴','龍鱗靴','天命神靴'],
-  ring:['銅戒','銀戒','金戒','翡翠戒','炎晶戒','龍魂戒','天命之戒'],
+  armor:['布衣','皮甲','鎖子甲','精鋼甲','炎紋甲','龍鱗甲','天命戰甲','星隕戰甲','龍神戰甲'],
+  helmet:['布帽','皮盔','鐵盔','精鋼盔','炎紋盔','龍鱗盔','天命頭冠','星隕之盔','龍神之盔'],
+  boots:['草鞋','皮靴','鐵靴','疾風靴','炎紋靴','龍鱗靴','天命神靴','星隕戰靴','龍神戰靴'],
+  ring:['銅戒','銀戒','金戒','翡翠戒','炎晶戒','龍魂戒','天命之戒','星隕之戒','龍神之戒'],
 };
 const SLOT_ICON = {helmet:'⛑️', armor:'🥋', boots:'👢', ring:'💍'};
 const W_ICON = {sword:'🗡️', mage:'🪄', ranger:'🏹'};
@@ -310,7 +366,8 @@ function expNeed(lv){ return Math.floor(20 * Math.pow(lv, 1.8) + 30); }
 
 function newPlayer(name, cls, gender){
   const p = {name, cls, lv:1, exp:0, gold:60, hpPot:5, mpPot:5, inv:[], eq:{weapon:null, helmet:null, armor:null, boots:null, ring:null},
-    gender:gender || 'male', quest:{i:0, c:0, acc:false}, map:'village', x:16 * TILE, y:13 * TILE, hp:0, mp:null, auto:false, kills:0};
+    gender:gender || 'male', quest:{i:0, c:0, acc:false}, map:'village', x:16 * TILE, y:13 * TILE, hp:0, mp:null, auto:false, kills:0,
+    attr:{str:0, vit:0, agi:0, int:0}, skLv:[1, 1, 1], towerBest:0, bounty:null, bountyDone:0};
   p.eq.weapon = genItem('weapon', 1, 0, cls);
   return p;
 }
@@ -327,14 +384,16 @@ function stats(){
     const m = 1 + it.enh * 0.1;
     hp += it.hp * m; mp += it.mp * m; atk += it.atk * m; def += it.def * m; crit += it.crit; spd += it.spd;
   }
+  const A = P.attr || {str:0, vit:0, agi:0, int:0};
+  atk += A.str * 0.8 + A.int * 0.25; hp += A.vit * 6; def += A.vit * 0.3; crit += A.agi * 0.25; spd += A.agi * 0.3; mp += A.int * 5;
   if(P.buffT > 0) atk *= 1.5;
-  return {maxHp:Math.round(hp), maxMp:Math.round(mp), atk:Math.round(atk), def:Math.round(def), crit:Math.min(60, Math.round(crit)), spd:150 * (1 + spd / 100), spdP:spd};
+  return {maxHp:Math.round(hp), maxMp:Math.round(mp), atk:Math.round(atk), def:Math.round(def), crit:Math.min(60, Math.round(crit)), spd:150 * (1 + spd / 100), spdP:Math.round(spd)};
 }
 function power(s){ return Math.round(s.atk * 3 + s.def * 4 + s.maxHp / 4 + s.maxMp / 8 + s.crit * 5); }
 
 /* ================= 裝備 ================= */
 function genItem(slot, mlv, q, cls){
-  const tier = clamp(Math.floor(mlv / 5), 0, 6);
+  const tier = clamp(Math.floor(mlv / 5), 0, 8);
   const pw = (4 + mlv * 1.6) * QM[q];
   const name = slot === 'weapon' ? WNAMES[cls || P.cls][tier] : NAMES[slot][tier];
   const it = {uid:uid(), slot, q, lv:Math.max(1, mlv - 2), enh:0, name, atk:0, def:0, hp:0, mp:0, crit:0, spd:0, cls:slot === 'weapon' ? (cls || P.cls) : null};
@@ -569,6 +628,7 @@ function buildMap(id){
       dec.push({t:r < 0.35 ? 'spike' : r < 0.6 ? 'deadtree' : r < 0.82 ? 'rock2' : 'vent', x, y, s:0.8 + R() * 0.5, v:R()});
     }
   }
+  bakeExtra(M, c, R, cw, ch, dec, avoid, free, path);
   // 邊框
   const grd = c.createLinearGradient(0, 0, 0, 40);
   grd.addColorStop(0, 'rgba(0,0,0,.45)'); grd.addColorStop(1, 'rgba(0,0,0,0)');
@@ -588,8 +648,8 @@ function spawnPos(def, zone){
   }
   return {x:M.w * TILE / 2, y:M.h * TILE / 2};
 }
-function makeMonster(type, zone){
-  const d = MT[type], pos = spawnPos(d, zone);
+function makeMonster(type, zone, ov){
+  const d = ov || MT[type], pos = spawnPos(d, zone);
   return {type, d, zone, x:pos.x, y:pos.y, hx:pos.x, hy:pos.y, hp:d.hp, cd:0, face:Math.random() < 0.5 ? 1 : -1, anim:Math.random() * 10,
     aggro:false, returning:false, dead:false, respawnT:0, hitFlash:0, slowT:0, stunT:0, wanderT:rand(0, 3), wx:pos.x, wy:pos.y, atkAnim:0, skillT:4, moving:false};
 }
@@ -598,7 +658,8 @@ function loadMap(id, tx, ty, silent){
   mapId = id; map = MAPS[id];
   const cache = buildMap(id);
   decos = cache.decos; solids = cache.solids;
-  monsters = []; drops = []; projs = []; fxs = []; timers = []; parts = [];
+  if(id !== 'tower') TW = null;
+  monsters = []; drops = []; projs = []; fxs = []; timers = []; parts = []; eprojs = []; goblinT = rand(40, 90);
   for(const [type, n, a, b] of map.monsters) for(let i = 0; i < n; i++) monsters.push(makeMonster(type, [a, b]));
   npcs = (map.npcs || []).map(n => ({...n, x:n.x * TILE, y:n.y * TILE, face:1, walk:0}));
   P.map = id;
@@ -657,15 +718,24 @@ function killMonster(m){
   // 掉落
   drops.push({k:'gold', x:m.x + rand(-10, 10), y:m.y + rand(-6, 6), amt:randi(m.d.gold[0], m.d.gold[1]), t:0});
   if(Math.random() < 0.12) drops.push({k:Math.random() < 0.6 ? 'hp' : 'mp', x:m.x + rand(-22, 22), y:m.y + rand(-12, 12), amt:1, t:0});
-  const nItems = m.d.boss ? 4 : m.d.elite ? 2 : (Math.random() < 0.13 ? 1 : 0);
+  if(m.d.flee){
+    for(let i = 0; i < 8; i++) drops.push({k:'gold', x:m.x + rand(-40, 40), y:m.y + rand(-20, 20), amt:randi(m.d.gold[0], m.d.gold[1]), t:0});
+    drops.push({k:'hp', x:m.x + rand(-30, 30), y:m.y + rand(-15, 15), amt:1, t:0}); drops.push({k:'mp', x:m.x + rand(-30, 30), y:m.y + rand(-15, 15), amt:1, t:0});
+    msg('擊倒寶藏哥布林！金幣散落一地！', '#f3dca0');
+  }
+  const nItems = m.d.flee ? 3 : m.d.boss ? 4 : m.d.elite ? 2 : (Math.random() < 0.13 ? 1 : 0);
   for(let i = 0; i < nItems; i++){
     const slot = SLOT_ORDER[Math.floor(Math.random() * 5)];
-    const q = m.d.boss ? Math.max(2, rollQ(0.08)) : m.d.elite ? Math.max(1, rollQ(0.05)) : rollQ(0);
+    const q = m.d.boss ? Math.max(2, rollQ(0.08)) : (m.d.elite || m.d.flee) ? Math.max(1, rollQ(0.05)) : rollQ(0);
     const it = genItem(slot, m.d.lv + randi(-1, 2), q);
     drops.push({k:'item', x:m.x + rand(-30, 30), y:m.y + rand(-16, 16), item:it, t:0});
     if(q >= 3) msg(`【${QN[q]}】${it.name} 掉落了！`, QC[q]);
   }
   // 任務
+  if(P.bounty && P.bounty.m === m.type && P.bounty.c < P.bounty.n){
+    P.bounty.c++;
+    if(P.bounty.c >= P.bounty.n) msg('懸賞目標達成，回懸賞官處領賞！', '#8ae08a');
+  }
   const Q = QUESTS[P.quest.i];
   if(Q && P.quest.acc && Q.m === m.type && P.quest.c < Q.n){
     P.quest.c++;
@@ -681,7 +751,7 @@ function gainExp(n){
   }
   if(up){
     S = stats(); P.hp = S.maxHp; P.mp = S.maxMp;
-    toast(`等級提升！Lv ${P.lv}`); msg(`恭喜升到 ${P.lv} 級！`, '#ffe066');
+    toast(`等級提升！Lv ${P.lv}`); msg(`恭喜升到 ${P.lv} 級！獲得屬性點，按 C 分配`, '#ffe066');
     ring(P.x, P.y, 90, '#ffe066', 0.8, 6); burst(P.x, P.y - 30, '#ffe066', 30, 160, 100);
     buildSkillbar(); save();
   }
@@ -729,7 +799,7 @@ function useSkill(i, silent){
   }
   P.mp -= sk.mp; P.scd[i] = sk.cd; P.atkAnim = 1;
   ftext(P.x, P.y - 108, sk.name, sk.fx, 14, 0.8);
-  const base = S.atk * sk.mult;
+  const base = S.atk * (sk.mult || 0) * skillMult(i);
   switch(sk.type){
     case 'aoeSelf':
       ring(P.x, P.y - 10, sk.r, sk.fx, 0.45, 6);
@@ -745,7 +815,7 @@ function useSkill(i, silent){
       break;
     }
     case 'buff':
-      P.buffT = sk.dur; P.hp = Math.min(S.maxHp, P.hp + S.maxHp * sk.heal);
+      P.buffT = sk.dur + (P.skLv[i] - 1) * 0.5; P.hp = Math.min(S.maxHp, P.hp + S.maxHp * sk.heal);
       ring(P.x, P.y, 70, sk.fx, 0.6, 6); burst(P.x, P.y - 30, sk.fx, 24, 140, 80);
       ftext(P.x, P.y - 122, '攻擊力 +50%', '#ff9a6a', 13, 1.2);
       break;
@@ -832,6 +902,7 @@ function update(dt){
   updatePlayer(dt);
   updateMonsters(dt);
   updateProjs(dt);
+  updateExtra(dt);
   for(let i = timers.length - 1; i >= 0; i--){ const t = timers[i]; t.t -= dt; if(t.t <= 0){ timers.splice(i, 1); t.fn(); } }
   for(let i = fxs.length - 1; i >= 0; i--){ const f = fxs[i]; f.t += dt; if(f.t >= f.life){ fxs.splice(i, 1); if(f.end) f.end(); } }
   for(let i = parts.length - 1; i >= 0; i--){ const p = parts[i]; p.t += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += p.g * dt; p.vx *= 0.96; if(p.t >= p.life) parts.splice(i, 1); }
@@ -932,11 +1003,12 @@ function autoThink(){
   let tm = null; bd = 1e9;
   for(const m of monsters){
     if(m.dead) continue;
-    if((m.d.boss || m.d.elite) && P.lv < m.d.lv - 2 && !m.aggro) continue;
-    let d = dist(P, m); if(m.aggro) d *= 0.4;
+    if((m.d.boss || m.d.elite) && P.lv < m.d.lv - 2 && !m.aggro && !map.instance) continue;
+    let d = dist(P, m); if(m.aggro) d *= 0.4; if(m.d.flee) d *= 0.2;
     if(d < bd){ bd = d; tm = m; }
   }
-  if(tm && bd < 900){ P.target = tm; return; }
+  if(tm && (bd < 900 || map.instance)){ P.target = tm; return; }
+  if(map.instance) return;
   P.moveTo = {x:rand(3, map.w - 3) * TILE, y:rand(3, map.h - 3) * TILE}; P.autoWander = true;
 }
 
@@ -951,21 +1023,22 @@ function updateMonsters(dt){
     m.anim += dt; m.cd -= dt; m.hitFlash -= dt; m.slowT -= dt; m.stunT -= dt; m.atkAnim = Math.max(0, m.atkAnim - dt * 4);
     m.moving = false;
     if(m.stunT > 0) continue;
+    if(d.flee){ fleeUpdate(m, dt, dist(m, P)); continue; }
     const spd = d.spd * (m.slowT > 0 ? 0.45 : 1);
     const dp = dist(m, P);
     if(!P.dead && !map.safe && !m.aggro && !m.returning && !d.passive && dp < (d.boss ? 280 : 165)) m.aggro = true;
     if(P.dead) m.aggro = false;
     if(m.aggro){
-      if(Math.hypot(m.x - m.hx, m.y - m.hy) > (d.boss ? 520 : 430)){ m.aggro = false; m.returning = true; }
+      if(!map.instance && Math.hypot(m.x - m.hx, m.y - m.hy) > (d.boss ? 520 : 430)){ m.aggro = false; m.returning = true; }
       else {
-        const ar = d.size + 18;
+        const ar = d.ranged || d.size + 18;
         if(dp > ar){ m.moving = stepToward(m, P.x, P.y, spd, dt); }
-        else { m.face = P.x >= m.x ? 1 : -1; if(m.cd <= 0){ m.cd = d.boss ? 1.3 : 1.4; m.atkAnim = 1; hitPlayer(d.atk, d.name); } }
+        else { m.face = P.x >= m.x ? 1 : -1; if(m.cd <= 0){ m.cd = d.ranged ? 1.8 : d.boss ? 1.3 : 1.4; m.atkAnim = 1; if(d.ranged) enemyShot(m); else hitPlayer(d.atk, d.name); } }
         if(d.elite){
           m.skillT -= dt;
           if(m.skillT <= 0 && dp < 420){
             m.skillT = d.boss ? 4.5 : 6;
-            const tx = P.x, ty = P.y, r = d.boss ? 105 : 80, col = d.boss ? '#ff3a1a' : '#9cff5a';
+            const tx = P.x, ty = P.y, r = d.boss ? 105 : 80, col = d.fx || (d.boss ? '#ff3a1a' : '#9cff5a');
             fxs.push({k:'warn', x:tx, y:ty, r, t:0, life:1.1, color:col});
             after(1.1, () => {
               ring(tx, ty, r, col, 0.4, 7); burst(tx, ty, col, 24, 200, 100); shake = Math.max(shake, 0.2);
@@ -1035,7 +1108,7 @@ function updateCam(dt){ const t = camTarget(); const k = 1 - Math.exp(-dt * 8); 
 /* ================= 繪製：Q 版人物 ================= */
 /* ================= 外觀系統（依裝備改變外觀） =================
    每個部位依「裝備階級 tier（0~6）」決定外觀。要新增或調整造型，改下面這幾張表即可。
-   tier 對應名稱：0 木/布、1 鐵/皮、2 精鋼/鎖子、3 寒霜/精鋼、4 烈焰/炎紋、5 龍、6 天命 */
+   tier 對應名稱：0 木/布、1 鐵/皮、2 精鋼/鎖子、3 寒霜/精鋼、4 烈焰/炎紋、5 龍、6 天命、7 星隕、8 龍神 */
 const ARMOR_LOOK = [
   {main:'#6e6150', trim:'#8a7a62', pad:0},
   {main:'#5e4630', trim:'#a07040', pad:1},
@@ -1044,18 +1117,21 @@ const ARMOR_LOOK = [
   {main:'#5a1e18', trim:'#ff7a1a', pad:2, cloak:'#6a1410', glow:'#ff5a1a'},
   {main:'#1e4a46', trim:'#7fe0c8', pad:3, cloak:'#0e2a28', glow:'#5ff0d0'},
   {main:'#e8e2d0', trim:'#ffd76a', pad:3, cloak:'#b8902a', glow:'#fff2a8'},
+  {main:'#2a1e4a', trim:'#c58aff', pad:3, cloak:'#140e2a', glow:'#c58aff'},
+  {main:'#18151a', trim:'#ffcf40', pad:3, cloak:'#5a0a0a', glow:'#ff4a2a'},
 ];
 const HELM_LOOK = [
   {t:'band', c:'#6e6150'}, {t:'cap', c:'#5e4630', p:'#a07040'}, {t:'iron', c:'#8a9098', p:'#5a5f68'},
   {t:'plume', c:'#b8c2ce', p:'#b02a22'}, {t:'horn', c:'#3a1612', p:'#ff7a1a'}, {t:'dragon', c:'#1e4a46', p:'#7fe0c8'}, {t:'crown', c:'#ffd76a', p:'#ff4a6a'},
+  {t:'dragon', c:'#2a1e4a', p:'#c58aff'}, {t:'horn', c:'#18151a', p:'#ffcf40'},
 ];
-const BOOT_LOOK = ['#4a3a2a', '#5a3a20', '#6a6f78', '#9aa4b0', '#5a1e18', '#1e4a46', '#e8d8a0'];
+const BOOT_LOOK = ['#4a3a2a', '#5a3a20', '#6a6f78', '#9aa4b0', '#5a1e18', '#1e4a46', '#e8d8a0', '#2a1e4a', '#18151a'];
 const WEAPON_LOOK = {
-  blade:['#9a9184', '#b8c0c8', '#d8e0e8', '#bfe6ff', '#ffb080', '#a0f5e2', '#fff4c0'],
-  guard:['#6b4a2a', '#7a7a80', '#c9a24a', '#8ad0ff', '#ff5a1a', '#2aa090', '#ffd76a'],
-  edge: [null, null, null, '#8ad0ff', '#ff6a1a', '#5ff0d0', '#ffe066'],
-  wood: ['#7b5a3a', '#5e3c22', '#4a3020', '#3a3a4a', '#4a1410', '#14403a', '#e8d8a0'],
-  gem:  ['#9fb0c0', '#c0d0ff', '#9fe8ff', '#c58aff', '#ff6a2a', '#5ff0d0', '#fff2a8'],
+  blade:['#9a9184', '#b8c0c8', '#d8e0e8', '#bfe6ff', '#ffb080', '#a0f5e2', '#fff4c0', '#d8c0ff', '#3a3038'],
+  guard:['#6b4a2a', '#7a7a80', '#c9a24a', '#8ad0ff', '#ff5a1a', '#2aa090', '#ffd76a', '#c58aff', '#ffcf40'],
+  edge: [null, null, null, '#8ad0ff', '#ff6a1a', '#5ff0d0', '#ffe066', '#e0b0ff', '#ff4a2a'],
+  wood: ['#7b5a3a', '#5e3c22', '#4a3020', '#3a3a4a', '#4a1410', '#14403a', '#e8d8a0', '#2a1e4a', '#18151a'],
+  gem:  ['#9fb0c0', '#c0d0ff', '#9fe8ff', '#c58aff', '#ff6a2a', '#5ff0d0', '#fff2a8', '#e0b0ff', '#ff3a2a'],
 };
 const CLASS_LOOK = {
   sword:  {style:'plate',   outfit:{main:'#34343e', trim:'#7a7a86'}, cloak:'#6a1a1a', hair:{male:['#2a2018','short'], female:['#18161c','pony']}},
@@ -1067,7 +1143,7 @@ function itemTier(it){
   if(it.tier != null) return it.tier;
   const arr = it.slot === 'weapon' ? (WNAMES[it.cls] || WNAMES.sword) : NAMES[it.slot];
   let i = arr ? arr.indexOf(it.name) : -1;
-  if(i < 0) i = clamp(Math.floor(((it.lv || 1) + 2) / 5), 0, 6);
+  if(i < 0) i = clamp(Math.floor(((it.lv || 1) + 2) / 5), 0, 8);
   it.tier = i; return i;
 }
 function heroLook(p){
@@ -1153,7 +1229,7 @@ function drawHelm(c, tier, time){
   }
 }
 function drawWeapon(c, h, W, atk, time){
-  const tier = clamp(W.tier || 0, 0, 6), glow = W.q >= 2 ? QC[W.q] : null, p = 1 - atk;
+  const tier = clamp(W.tier || 0, 0, 8), glow = W.q >= 2 ? QC[W.q] : null, p = 1 - atk;
   c.save(); c.translate(h.hx, h.hy);
   if(W.type === 'sword' || W.type === 'rusty'){
     c.rotate(-h.ang);
@@ -1292,7 +1368,7 @@ function drawHero(c, x, y, o){
     c.strokeStyle = shade(skin, -45); c.lineWidth = 0.9; c.beginPath(); c.moveTo(7.6, -75.2); c.lineTo(8.7, -72.4); c.lineTo(7.4, -72); c.stroke();
     c.strokeStyle = fem ? '#a8504a' : shade(skin, -50); c.lineWidth = fem ? 1.3 : 0.9; c.beginPath(); c.moveTo(5, -69.6); c.lineTo(7.4, -69.9); c.stroke();
     if(L.beard){ c.fillStyle = L.hairCol; c.beginPath(); c.moveTo(-0.5, -73); c.quadraticCurveTo(0, -63.5, 5, -62.5); c.quadraticCurveTo(8.6, -63.6, 8.6, -69); c.lineTo(7.2, -68.6); c.quadraticCurveTo(4, -67.4, 1.8, -71); c.closePath(); c.fill(); }
-    const fullHelm = L.helmet >= 2 && L.helmet !== 6;
+    const HT = HELM_LOOK[L.helmet], fullHelm = HT && !['band', 'cap', 'crown'].includes(HT.t);
     if(!fullHelm) drawHairTop(c, L);
   }
   if(L.helmet >= 0) drawHelm(c, L.helmet, time);
@@ -1384,10 +1460,10 @@ function drawMonster(m){
       c.fillStyle = '#fff'; c.beginPath(); c.moveTo(-2, 5); c.lineTo(-1, 9); c.lineTo(0, 5); c.moveTo(2, 5); c.lineTo(3, 9); c.lineTo(4, 5); c.fill();
       break;
     }
-    case 'skeleton':
+    case 'skeleton': case 'hero':
       c.restore(); c.save(); c.translate(m.x + lunge * f, m.y);
       if(m.hitFlash > 0) c.filter = 'brightness(2.2)';
-      drawHero(c, 0, 0, {look:SKEL_LOOK, face:m.face, walk:m.anim * 10, moving:m.moving, atk:m.atkAnim, time:m.anim, noShadow:true});
+      drawHero(c, 0, 0, {look:d.look || SKEL_LOOK, scale:d.scale || 1, face:m.face, walk:m.anim * 10, moving:m.moving, atk:m.atkAnim, time:m.anim, noShadow:true});
       break;
     case 'spider': {
       c.scale(f, 1);
@@ -1429,9 +1505,9 @@ function drawMonster(m){
       c.fillStyle = d.color; rr(c, -22, -50, 44, 40, 14); c.fill();
       c.fillStyle = shade(d.color, -25); c.beginPath(); c.arc(-24, -36, 10, 0, PI2); c.fill(); c.beginPath(); c.arc(26, -32 + (m.atkAnim > 0 ? -8 : 0), 11, 0, PI2); c.fill();
       c.fillStyle = d.color; rr(c, -14, -72, 30, 26, 10); c.fill();
-      c.strokeStyle = '#ff7a1a'; c.lineWidth = 2.5; c.shadowColor = '#ff5a00'; c.shadowBlur = 8;
+      c.strokeStyle = d.glow || '#ff7a1a'; c.lineWidth = 2.5; c.shadowColor = d.glow || '#ff5a00'; c.shadowBlur = 8;
       c.beginPath(); c.moveTo(-12, -44); c.lineTo(-4, -34); c.lineTo(-10, -22); c.moveTo(8, -46); c.lineTo(4, -36); c.lineTo(12, -26); c.moveTo(-6, -70); c.lineTo(-2, -62); c.stroke();
-      c.fillStyle = '#ffcf33'; ell(c, -1, -60, 3.5, 3); c.fill(); ell(c, 9, -60, 3.5, 3); c.fill(); c.shadowBlur = 0;
+      c.fillStyle = d.glow ? '#e0f8ff' : '#ffcf33'; ell(c, -1, -60, 3.5, 3); c.fill(); ell(c, 9, -60, 3.5, 3); c.fill(); c.shadowBlur = 0;
       break;
     }
     case 'boss': {
@@ -1456,6 +1532,7 @@ function drawMonster(m){
       if(Math.random() < 0.5) parts.push({x:m.x + rand(-40, 40), y:m.y - rand(10, 90), vx:rand(-10, 10), vy:rand(-70, -30), life:rand(0.4, 0.9), t:0, color:Math.random() < 0.5 ? '#ff5a1f' : '#ffb020', size:rand(2, 5), g:0});
       break;
     }
+    default: drawMonsterExtra(c, m, d, t, f);
   }
   c.restore();
   ctx.filter = 'none';
@@ -1522,7 +1599,7 @@ function drawDeco(o){
       break;
     case 'rock': case 'rock2':
       c.fillStyle = 'rgba(0,0,0,.25)'; ell(c, 0, 0, 16 * s, 5 * s); c.fill();
-      c.fillStyle = o.t === 'rock2' ? '#3a2a26' : mapId === 'cave' ? '#5a5466' : '#8a8a92';
+      c.fillStyle = o.t === 'rock2' ? '#3a2a26' : ({cave:'#5a5466', snow:'#9aa8b8', grave:'#4a4a46', desert:'#a07a4a', lair:'#3a2424'}[mapId] || '#8a8a92');
       c.beginPath(); c.moveTo(-15 * s, 0); c.lineTo(-11 * s, -14 * s); c.lineTo(0, -20 * s); c.lineTo(12 * s, -12 * s); c.lineTo(15 * s, 0); c.closePath(); c.fill();
       c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.moveTo(-11 * s, -14 * s); c.lineTo(0, -20 * s); c.lineTo(-2 * s, -10 * s); c.closePath(); c.fill();
       break;
@@ -1533,7 +1610,7 @@ function drawDeco(o){
       break;
     case 'crystal': {
       const gl = 0.6 + Math.sin(gt * 2 + o.v * 10) * 0.25;
-      const col = o.v < 0.5 ? '#6ae0ff' : '#c58aff';
+      const col = o.col || (o.v < 0.5 ? '#6ae0ff' : '#c58aff');
       c.fillStyle = col; c.globalAlpha = 0.18 * gl; c.beginPath(); c.arc(0, -14 * s, 34 * s, 0, PI2); c.fill(); c.globalAlpha = 1;
       c.shadowColor = col; c.shadowBlur = 14 * gl;
       c.fillStyle = col;
@@ -1611,6 +1688,7 @@ function drawDeco(o){
       for(let k = -2; k <= 2; k++){ c.beginPath(); c.moveTo(k * 15 - 2.5, 0); c.lineTo(k * 15 - 2.5, -22); c.lineTo(k * 15, -26); c.lineTo(k * 15 + 2.5, -22); c.lineTo(k * 15 + 2.5, 0); c.fill(); }
       c.fillRect(-34, -19, 68, 3.5); c.fillRect(-34, -9, 68, 3.5);
       break;
+    default: drawDecoExtra(c, o, s);
   }
   c.restore();
 }
@@ -1706,6 +1784,7 @@ function render(){
     }
     ctx.restore();
   }
+  drawEprojs();
   // 特效
   for(const f of fxs){
     const k = f.t / f.life;
@@ -1769,7 +1848,7 @@ function drawPortrait(){
 function buildSkillbar(){
   const sb = $('skillbar'); let h = '';
   SKILLS[P.cls].forEach((sk, i) => {
-    h += `<button class="sk" data-sk="${i}" title="${sk.name}（Lv${sk.lv}，耗魔 ${sk.mp}）"><span class="key">${i + 1}</span>${sk.icon}<span class="nm2">${P.lv < sk.lv ? 'Lv' + sk.lv : sk.name}</span><div class="cdm"></div><div class="cdt"></div></button>`;
+    h += `<button class="sk" data-sk="${i}" title="${sk.name}（Lv${sk.lv}，耗魔 ${sk.mp}）"><span class="key">${i + 1}</span>${sk.icon}<span class="nm2">${P.lv < sk.lv ? 'Lv' + sk.lv : sk.name + (P.skLv[i] > 1 ? ' ' + P.skLv[i] : '')}</span><div class="cdm"></div><div class="cdt"></div></button>`;
   });
   h += `<button class="sk" data-pot="hp" title="紅藥水" style="filter:hue-rotate(150deg)"><span class="key">Q</span>🧪<span class="cnt" id="hpC"></span></button>`;
   h += `<button class="sk" data-pot="mp" title="藍藥水"><span class="key">E</span>🧪<span class="cnt" id="mpC"></span></button>`;
@@ -1802,6 +1881,8 @@ function updateHUD(){
   if(!q) qh += '<div class="ok">所有任務已完成！你是大陸的英雄！</div>';
   else if(!P.quest.acc) qh += `<div>【${q.t}】</div><div style="color:#ffe066">找村長·老莫接取任務</div>`;
   else qh += `<div>【${q.t}】</div><div>擊敗 ${MT[q.m].name}：<span class="${P.quest.c >= q.n ? 'ok' : ''}">${P.quest.c}/${q.n}</span></div>${P.quest.c >= q.n ? '<div class="ok">✔ 回晨曦村找村長交付</div>' : ''}`;
+  if(P.bounty){ const B = P.bounty; qh += `<div class="qt" style="margin-top:6px">懸賞令</div><div>${MT[B.m].name}：<span class="${B.c >= B.n ? 'ok' : ''}">${B.c}/${B.n}</span></div>${B.c >= B.n ? '<div class="ok">✔ 回懸賞官處領賞</div>' : ''}`; }
+  if(TW && mapId === 'tower') qh = `<div class="qt">試煉之塔 第 ${TW.floor} 層</div><div>剩餘敵人：${monsters.filter(m => !m.dead).length}</div><div>${TW.state === 'wait' ? '<span class="ok">通關！準備下一層…</span>' : '剩餘時間：' + Math.ceil(TW.timer) + ' 秒'}</div>` + qh;
   $('quest').innerHTML = qh;
   // 目標
   const tg = P.target && !P.target.dead ? P.target : null;
@@ -1826,7 +1907,7 @@ function drawMini(){
 let panelKind = null, selInv = null;
 function openPanel(kind, title, html){ panelKind = kind; $('pTitle').textContent = title; $('pBody').innerHTML = html; $('panel').classList.remove('hidden'); }
 function closePanel(){ panelKind = null; selInv = null; $('panel').classList.add('hidden'); }
-function togglePanel(k){ if(panelKind === k) closePanel(); else if(k === 'bag') openBag(); }
+function togglePanel(k){ if(panelKind === k) closePanel(); else if(k === 'bag') openBag(); else if(k === 'char') openChar(); }
 $('pClose').onclick = closePanel;
 
 function openBag(){
@@ -1879,6 +1960,8 @@ function openNpc(id){
   else if(id === 'shop') openShop();
   else if(id === 'smith') openSmith();
   else if(id === 'tele') openTele();
+  else if(id === 'bounty') openBounty();
+  else if(id === 'tower') openTowerNpc();
 }
 function openElder(){
   const q = QUESTS[P.quest.i];
@@ -1917,7 +2000,7 @@ function openSmith(){
 }
 function openTele(){
   let h = `<div class="npcsay">星語：「星辰指引方向～想去哪裡呢？」</div>`;
-  const list = [['forest', 1, 3, 20, '新手練功'], ['cave', 10, 3, 15, '洞窟·蛛后'], ['lava', 18, 3, 18, '魔域·炎魔君主']];
+  const list = [['forest', 1, 3, 20, '新手練功'], ['cave', 10, 3, 15, '洞窟·蛛后'], ['lava', 18, 3, 18, '魔域·炎魔君主'], ['snow', 26, 3, 17, '雪原·冰霜女王'], ['grave', 34, 3, 17, '墓地·死靈領主'], ['desert', 42, 3, 17, '遺跡·沙蟲之王'], ['lair', 50, 3, 18, '龍巢·遠古黑龍']];
   for(const [id, lv, tx, ty, tip] of list){
     const cost = lv * 5;
     h += `<div class="row"><span><b>${MAPS[id].name}</b>（建議 Lv${lv}+，${tip}）</span><button class="btn" data-act="tele" data-m="${id}" data-x="${tx}" data-y="${ty}" data-c="${cost}">${cost ? cost + ' 金' : '免費'}</button></div>`;
@@ -1932,6 +2015,7 @@ $('panel').addEventListener('click', e => {
   }
   const b = e.target.closest('[data-act]'); if(!b) return;
   const a = b.dataset.act;
+  if(handleExtraAct(a, b)) return;
   if(a === 'equip'){ equip(+b.dataset.i); selInv = null; openBag(); }
   else if(a === 'sell'){ sellItem(+b.dataset.i); selInv = null; openBag(); }
   else if(a === 'unequip'){ unequip(b.dataset.s); selInv = null; openBag(); }
@@ -1975,6 +2059,7 @@ addEventListener('keydown', e => {
   else if(k === 'q') usePot('hp');
   else if(k === 'e') usePot('mp');
   else if(k === 'b' || k === 'i') togglePanel('bag');
+  else if(k === 'c') togglePanel('char');
   else if(k === 'z') toggleAuto();
   else if(k === 't') goTown();
   else if(k === 'escape') closePanel();
@@ -2001,12 +2086,13 @@ cv.addEventListener('contextmenu', e => e.preventDefault());
 $('bAuto').onclick = () => toggleAuto();
 $('bBag').onclick = () => togglePanel('bag');
 $('bTown').onclick = () => goTown();
+$('bChar').onclick = () => togglePanel('char');
 $('bRevive').onclick = () => revive();
 
 /* ================= 存檔 ================= */
 function save(){
   if(!P) return;
-  const keep = ['name', 'cls', 'gender', 'lv', 'exp', 'gold', 'hpPot', 'mpPot', 'inv', 'eq', 'quest', 'map', 'x', 'y', 'hp', 'mp', 'auto', 'kills'];
+  const keep = ['name', 'cls', 'gender', 'attr', 'skLv', 'towerBest', 'bounty', 'bountyDone', 'lv', 'exp', 'gold', 'hpPot', 'mpPot', 'inv', 'eq', 'quest', 'map', 'x', 'y', 'hp', 'mp', 'auto', 'kills'];
   const d = {}; for(const k of keep) d[k] = P[k];
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(d)); }catch(_){}
 }
@@ -2040,6 +2126,8 @@ function drawCards(){
 }
 function startGame(d){
   P = d; initRuntime(P);
+  if(!P.attr) P.attr = {str:0, vit:0, agi:0, int:0}; if(!P.skLv) P.skLv = [1, 1, 1]; if(P.towerBest == null) P.towerBest = 0; if(P.bountyDone == null) P.bountyDone = 0;
+  if(P.map === 'tower') P.map = 'village';
   S = stats();
   if(!P.hp || P.hp <= 0) P.hp = S.maxHp; if(P.mp == null) P.mp = S.maxMp;
   P.hp = Math.min(P.hp, S.maxHp); P.mp = Math.min(P.mp, S.maxMp);
@@ -2053,6 +2141,7 @@ function startGame(d){
   toast(map.name);
   msg(`歡迎來到 烈焰英雄傳，${P.name}！`, '#f3dca0');
   if(P.quest.i === 0 && !P.quest.acc) msg('先去找頭上有「!」的村長·老莫接任務吧！', '#9fe');
+  if(attrFree() > 0) msg(`你有 ${attrFree()} 點屬性點可分配，按 C 開啟修煉`, '#f3dca0');
 }
 let overwriteArmed = false;
 $('bStart').onclick = () => {
@@ -2065,6 +2154,417 @@ $('bCont').onclick = () => { const d = loadSave(); if(d) startGame(d); };
 buildCards();
 $('gender').querySelectorAll('button').forEach(b => b.onclick = () => { selGender = b.dataset.g; $('gender').querySelectorAll('button').forEach(x => x.classList.toggle('sel', x === b)); });
 { const d = loadSave(); if(d){ $('bCont').classList.remove('hidden'); $('bCont').textContent = `繼續遊戲（${d.name} Lv${d.lv}）`; } }
+
+/* ================= 擴充玩法 ================= */
+// ---- 屬性點 ----
+const ATTRS = [
+  {k:'str', n:'力量', d:'每點 +0.8 攻擊'},
+  {k:'vit', n:'體質', d:'每點 +6 生命、+0.3 防禦'},
+  {k:'agi', n:'敏捷', d:'每點 +0.25% 暴擊、+0.3% 移速'},
+  {k:'int', n:'智力', d:'每點 +5 魔力、+0.25 攻擊'},
+];
+function attrTotal(){ const a = P.attr; return a.str + a.vit + a.agi + a.int; }
+function attrFree(){ return (P.lv - 1) * 3 - attrTotal(); }
+// ---- 技能修煉 ----
+const SK_MAX = 10;
+function skillMult(i){ return 1 + 0.15 * ((P.skLv[i] || 1) - 1); }
+function skillCost(i){ const sk = SKILLS[P.cls][i], l = P.skLv[i]; return Math.round((sk.lv * 30 + 80) * l * l); }
+function skillReqLv(i){ return SKILLS[P.cls][i].lv + P.skLv[i] * 4; }
+
+// ---- 懸賞 ----
+function bountyPick(){
+  const pool = [];
+  for(const id in MAPS){ const M = MAPS[id]; if(M.instance) continue; for(const [t] of M.monsters){ const d = MT[t]; if(!d.elite && !d.boss && !d.flee) pool.push(t); } }
+  let cands = pool.filter(t => MT[t].lv <= P.lv + 3 && MT[t].lv >= P.lv - 8);
+  if(!cands.length) cands = [pool.reduce((b, t) => Math.abs(MT[t].lv - P.lv) < Math.abs(MT[b].lv - P.lv) ? t : b, pool[0])];
+  const m = cands[randi(0, cands.length - 1)], d = MT[m], n = randi(15, 25);
+  return {m, n, c:0, gold:Math.round(d.gold[1] * n * 1.5 + d.lv * 20), exp:Math.round(d.exp * n * 1.2)};
+}
+function mapOf(type){ for(const id in MAPS) if(MAPS[id].monsters.some(e => e[0] === type)) return MAPS[id].name; return ''; }
+
+// ---- 試煉之塔 ----
+let TW = null;
+const TOWER_TIME = 120;
+function towerPool(L, elite){
+  const list = Object.keys(MT).filter(k => { const d = MT[k]; return !d.flee && (elite ? (d.elite || d.boss) : !(d.elite || d.boss)); });
+  list.sort((a, b) => Math.abs(MT[a].lv - L) - Math.abs(MT[b].lv - L));
+  return list.slice(0, elite ? 1 : 3);
+}
+function scaledDef(type, L, hpMul){
+  const d = MT[type], r = clamp(L / d.lv, 0.5, 1.8);
+  return {...d, lv:L, hp:Math.round(d.hp * Math.pow(r, 1.4) * (hpMul || 1)), atk:Math.round(d.atk * r), def:Math.round(d.def * r), exp:Math.round(d.exp * r),
+    gold:[Math.round(d.gold[0] * r), Math.round(d.gold[1] * r)], respawn:1e9};
+}
+function towerStart(f){ TW = {floor:f, timer:TOWER_TIME, state:'fight', waitT:0}; loadMap('tower', 11, 12); towerSpawn(); }
+function towerSpawn(){
+  const f = TW.floor, L = 4 + f * 2, boss = f % 5 === 0;
+  monsters = [];
+  const pool = towerPool(L, false), n = boss ? 4 : Math.min(14, 5 + Math.floor(f / 2));
+  for(let i = 0; i < n; i++){ const t = pool[randi(0, pool.length - 1)]; monsters.push(makeMonster(t, [0.12, 0.88], scaledDef(t, L))); }
+  if(boss){ const t = towerPool(L + 2, true)[0]; monsters.push(makeMonster(t, [0.45, 0.55], scaledDef(t, L + 2, 0.5))); }
+  for(const m of monsters){ m.aggro = true; m.y = m.hy = clamp(m.y, 2.5 * TILE, (map.h - 5) * TILE); }
+  TW.timer = TOWER_TIME + (boss ? 60 : 0); TW.state = 'fight';
+  toast(`試煉之塔 第 ${f} 層${boss ? '・首領' : ''}`);
+}
+function towerUpdate(dt){
+  if(!TW || mapId !== 'tower' || P.dead) return;
+  if(TW.state === 'fight'){
+    TW.timer -= dt;
+    if(monsters.every(m => m.dead)){
+      const f = TW.floor, L = 4 + f * 2, bossF = f % 5 === 0;
+      const gold = Math.round(25 * L * (bossF ? 3 : 1)), exp = Math.round(expNeed(Math.min(P.lv, L + 2)) * (bossF ? 0.12 : 0.05));
+      P.gold += gold; gainExp(exp);
+      if(bossF){ const it = genItem(SLOT_ORDER[randi(0, 4)], L + 2, Math.max(2, rollQ(0.08))); drops.push({k:'item', x:P.x + 30, y:P.y + 10, item:it, t:0}); }
+      if(f > (P.towerBest || 0)){ P.towerBest = f; msg(`試煉之塔新紀錄：第 ${f} 層！`, '#f3dca0'); }
+      msg(`第 ${f} 層通關！獲得 ${gold} 金幣、${exp} 經驗`, '#8ae08a'); toast(`第 ${f} 層通關`);
+      TW.state = 'wait'; TW.waitT = 4; save();
+    } else if(TW.timer <= 0){ msg(`試煉失敗：第 ${TW.floor} 層超時`, '#ff8a8a'); TW = null; loadMap('village', 16, 17.8); }
+  } else if(TW.state === 'wait'){
+    TW.waitT -= dt;
+    if(TW.waitT <= 0){ TW.floor++; towerSpawn(); }
+  }
+}
+
+// ---- 寶藏哥布林 ----
+let goblinT = 60;
+function goblinUpdate(dt){
+  if(map.safe || map.instance || P.dead) return;
+  goblinT -= dt;
+  if(goblinT > 0) return;
+  goblinT = rand(70, 130);
+  if(monsters.some(m => m.d.flee && !m.dead)) return;
+  const lvs = map.monsters.map(e => MT[e[0]].lv), L = Math.round(lvs.reduce((a, b) => a + b, 0) / lvs.length);
+  const def = {...MT.goblin, lv:L, hp:60 + L * 45, def:Math.round(L * 0.6), exp:MT.goblin.exp * L, gold:[L * 6, L * 10], respawn:1e9};
+  const a = Math.random() * PI2, r = rand(260, 360), m = makeMonster('goblin', [0.1, 0.9], def);
+  m.x = m.hx = clamp(P.x + Math.cos(a) * r, TILE * 2, (map.w - 2) * TILE);
+  m.y = m.hy = clamp(P.y + Math.sin(a) * r, TILE * 2, (map.h - 2) * TILE);
+  m.life = 35; monsters.push(m);
+  msg('寶藏哥布林出現了！快追上牠！', '#f3dca0'); toast('寶藏哥布林出現！');
+}
+function fleeUpdate(m, dt, dp){
+  m.life -= dt;
+  if(m.life <= 0){ m.dead = true; m.respawnT = 1e9; if(P.target === m) P.target = null; burst(m.x, m.y - 20, '#ffd76a', 20, 120); msg('寶藏哥布林鑽進傳送門逃走了……', '#9a9488'); return; }
+  const spd = m.d.spd * (m.slowT > 0 ? 0.45 : 1);
+  if(dp < 340 || m.aggro){
+    let a = Math.atan2(m.y - P.y, m.x - P.x) + Math.sin(m.anim * 2) * 0.7;
+    const cx = map.w * TILE / 2, cy = map.h * TILE / 2;
+    if(m.x < 3 * TILE || m.x > (map.w - 3) * TILE || m.y < 3 * TILE || m.y > (map.h - 3) * TILE) a = Math.atan2(cy - m.y, cx - m.x) + (Math.random() - 0.5);
+    m.moving = stepToward(m, m.x + Math.cos(a) * 80, m.y + Math.sin(a) * 80, spd, dt);
+  }
+  if(Math.random() < 0.15) parts.push({x:m.x + rand(-8, 8), y:m.y - rand(10, 30), vx:0, vy:-30, life:0.5, t:0, color:'#ffd76a', size:2, g:0});
+}
+
+// ---- 敵方投射物 ----
+let eprojs = [];
+function enemyShot(m){
+  const d = m.d, sx = m.x + m.face * 14, sy = m.y - d.h * 0.55, a = Math.atan2(P.y - 40 - sy, P.x - sx), sp = 300;
+  eprojs.push({x:sx, y:sy, vx:Math.cos(a) * sp, vy:Math.sin(a) * sp, dmg:d.atk, life:2.2, color:d.pc || '#9cff5a', src:d.name, big:!!d.boss});
+}
+function eprojUpdate(dt){
+  for(let i = eprojs.length - 1; i >= 0; i--){
+    const p = eprojs[i]; p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt;
+    if(Math.random() < 0.6) parts.push({x:p.x, y:p.y, vx:rand(-15, 15), vy:rand(-15, 15), life:0.3, t:0, color:p.color, size:p.big ? 5 : 3, g:0});
+    if(!P.dead && Math.hypot(P.x - p.x, P.y - 40 - p.y) < (p.big ? 26 : 18)){ hitPlayer(p.dmg, p.src); burst(p.x, p.y, p.color, 10, 120); eprojs.splice(i, 1); continue; }
+    if(p.life <= 0) eprojs.splice(i, 1);
+  }
+}
+function drawEprojs(){
+  for(const p of eprojs){
+    ctx.shadowColor = p.color; ctx.shadowBlur = 14; ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.big ? 10 : 6, 0, PI2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, p.y, p.big ? 4 : 2.5, 0, PI2); ctx.fill(); ctx.shadowBlur = 0;
+  }
+}
+function updateExtra(dt){
+  towerUpdate(dt); goblinUpdate(dt); eprojUpdate(dt);
+  const rx = () => cam.x + Math.random() * W / ZOOM, ry = () => cam.y + Math.random() * H / ZOOM;
+  if(map.theme === 'snow' && Math.random() < dt * 30) parts.push({x:rx(), y:cam.y - 10, vx:rand(-20, 10), vy:rand(30, 60), life:rand(4, 7), t:0, color:'rgba(255,255,255,.85)', size:rand(1.2, 2.6), g:0});
+  if(map.theme === 'grave' && Math.random() < dt * 3) parts.push({x:rx(), y:ry(), vx:rand(-6, 6), vy:rand(-14, -6), life:rand(2, 4), t:0, color:'#8aff9a', size:2.2, g:0});
+  if(map.theme === 'desert' && Math.random() < dt * 12) parts.push({x:cam.x - 10, y:ry(), vx:rand(80, 140), vy:rand(-5, 5), life:rand(3, 6), t:0, color:'rgba(230,200,140,.6)', size:rand(1, 2), g:0});
+  if(map.theme === 'lair' && Math.random() < dt * 10) parts.push({x:rx(), y:cam.y + H / ZOOM + 10, vx:rand(-10, 10), vy:rand(-70, -30), life:rand(2, 4), t:0, color:'#ff5a2a', size:rand(1.5, 3), g:0});
+}
+
+// ---- 角色修煉面板 ----
+function openChar(){
+  const free = attrFree(); S = stats();
+  let h = `<div class="npcsay">每升 1 級獲得 3 點屬性點。技能可以花金幣修煉，每級傷害 +15%。</div>`;
+  h += `<div style="font-family:var(--serif);color:var(--gold2);font-weight:900;margin:4px 0">屬性點　剩餘 <b style="color:#8ae08a">${free}</b></div>`;
+  for(const a of ATTRS) h += `<div class="row"><span><b>${a.n}</b>　${P.attr[a.k]}<br><small style="color:var(--muted)">${a.d}</small></span><span><button class="btn" data-act="attr" data-k="${a.k}" data-n="1" ${free < 1 ? 'disabled' : ''}>+1</button><button class="btn" data-act="attr" data-k="${a.k}" data-n="5" ${free < 5 ? 'disabled' : ''}>+5</button></span></div>`;
+  h += `<div class="row"><span style="color:var(--muted)">重置屬性點（${P.lv * 50} 金幣）</span><button class="btn r" data-act="attrreset" ${attrTotal() ? '' : 'disabled'}>重置</button></div>`;
+  h += `<div style="font-family:var(--serif);color:var(--gold2);font-weight:900;margin:12px 0 4px">技能修煉</div>`;
+  SKILLS[P.cls].forEach((sk, i) => {
+    const l = P.skLv[i], max = l >= SK_MAX, req = skillReqLv(i), lock = P.lv < sk.lv;
+    const eff = sk.type === 'buff' ? `攻擊 +50%、持續 ${sk.dur + (l - 1) * 0.5} 秒` : `傷害倍率 ${Math.round(sk.mult * skillMult(i) * 100)}%`;
+    const note = lock ? `・需要等級 ${sk.lv}` : max ? '' : `・下一級需要角色 Lv${req}`;
+    h += `<div class="row"><span>${sk.icon} <b>${sk.name}</b>　Lv${l}/${SK_MAX}<br><small style="color:var(--muted)">${eff}${note}</small></span><button class="btn" data-act="skup" data-i="${i}" ${(max || lock || P.lv < req) ? 'disabled' : ''}>${max ? '已滿級' : skillCost(i) + ' 金'}</button></div>`;
+  });
+  h += `<div class="stats"><div>試煉之塔最高 <b>${P.towerBest || 0}</b> 層</div><div>完成懸賞 <b>${P.bountyDone || 0}</b> 次</div><div>擊殺 <b>${P.kills}</b></div><div>戰力 <b style="color:var(--ember)">${power(S)}</b></div></div>`;
+  openPanel('char', '角色修煉', h);
+}
+function openBounty(){
+  const B = P.bounty;
+  let h = `<div class="npcsay">鐵鷹：「懸賞令隨時更新，完成就來領賞。每完成 5 張，額外送你一件好裝備。」</div>`;
+  if(!B){
+    if(!P.bountyOffer) P.bountyOffer = bountyPick();
+    const o = P.bountyOffer, d = MT[o.m];
+    h += `<div class="row"><span>討伐 <b>${d.name}</b>（Lv${d.lv}・${mapOf(o.m)}）× ${o.n}<br><small style="color:var(--muted)">獎勵 ${o.gold} 金幣、${o.exp} 經驗${((P.bountyDone || 0) + 1) % 5 === 0 ? '、精良以上裝備' : ''}</small></span><span><button class="btn g" data-act="bacc">接受</button><button class="btn" data-act="bnew">換一張（${P.lv * 10} 金）</button></span></div>`;
+  } else {
+    const d = MT[B.m], done = B.c >= B.n;
+    h += `<div class="row"><span>討伐 <b>${d.name}</b>（${mapOf(B.m)}）　<span class="${done ? 'ok' : ''}" style="${done ? 'color:#8ae08a' : ''}">${B.c}/${B.n}</span></span><span>${done ? '<button class="btn g" data-act="bclaim">領取獎勵</button>' : ''}<button class="btn r" data-act="bdrop">放棄</button></span></div>`;
+  }
+  h += `<div style="color:var(--muted);margin-top:6px">已完成懸賞 ${P.bountyDone || 0} 次</div>`;
+  openPanel('bounty', '懸賞官·鐵鷹', h);
+}
+function openTowerNpc(){
+  const best = P.towerBest || 0, cont = Math.floor(best / 5) * 5 + 1;
+  let h = `<div class="npcsay">雷恩：「每層都要在時限內擊敗所有敵人，每 5 層有首領守關。越往上，獎勵越豐厚。」</div>
+    <div class="row"><span>最高紀錄：第 <b style="color:var(--gold2)">${best}</b> 層</span></div>
+    <div class="row"><span>從第 1 層開始</span><button class="btn g" data-act="tower" data-f="1">進入</button></div>`;
+  if(cont > 1) h += `<div class="row"><span>從第 ${cont} 層開始（依最高紀錄）</span><button class="btn g" data-act="tower" data-f="${cont}">進入</button></div>`;
+  h += `<div style="color:var(--muted);margin-top:6px">敵人等級 = 4 + 層數 × 2。每層限時 120 秒，首領層多 60 秒。離開請走出口傳送門或按回城。</div>`;
+  openPanel('towernpc', '試煉守衛·雷恩', h);
+}
+function handleExtraAct(a, b){
+  const poor = c => { if(P.gold < c){ msg('金幣不足！', '#ff8a8a'); return true; } P.gold -= c; return false; };
+  switch(a){
+    case 'attr': { const n = Math.min(+b.dataset.n, attrFree()); if(n > 0){ P.attr[b.dataset.k] += n; afterEquip(); } openChar(); return true; }
+    case 'attrreset': if(poor(P.lv * 50)) return true; P.attr = {str:0, vit:0, agi:0, int:0}; afterEquip(); msg('屬性點已重置', '#f3dca0'); openChar(); return true;
+    case 'skup': { const i = +b.dataset.i; if(poor(skillCost(i))) return true; P.skLv[i]++; msg(`【${SKILLS[P.cls][i].name}】提升到 Lv${P.skLv[i]}`, '#8ae08a'); buildSkillbar(); save(); openChar(); return true; }
+    case 'bacc': P.bounty = P.bountyOffer; P.bountyOffer = null; msg(`接受懸賞：討伐 ${MT[P.bounty.m].name} × ${P.bounty.n}`, '#f3dca0'); save(); openBounty(); return true;
+    case 'bnew': if(poor(P.lv * 10)) return true; P.bountyOffer = bountyPick(); openBounty(); return true;
+    case 'bdrop': P.bounty = null; save(); openBounty(); return true;
+    case 'bclaim': {
+      const B = P.bounty; P.gold += B.gold; gainExp(B.exp); P.bountyDone = (P.bountyDone || 0) + 1;
+      if(P.bountyDone % 5 === 0){ const it = genItem(SLOT_ORDER[randi(0, 4)], MT[B.m].lv + 2, Math.max(2, rollQ(0.05))); if(P.inv.length < INV_MAX){ P.inv.push(it); msg(`懸賞額外獎勵：${it.name}`, QC[it.q]); } else P.gold += it.price; }
+      msg(`懸賞完成！獲得 ${B.gold} 金幣、${B.exp} 經驗`, '#8ae08a'); P.bounty = null; P.bountyOffer = null; save(); openBounty(); return true;
+    }
+    case 'tower': closePanel(); towerStart(+b.dataset.f); return true;
+  }
+  return false;
+}
+
+// ---- 新地形 ----
+const DECOSET = {
+  snow:   {n:220, set:[['snowpine', 0.5], ['rock', 0.66], ['crystal', 0.8], ['deadtree', 1]], col:'#bfeaff'},
+  grave:  {n:210, set:[['tomb', 0.35], ['cross', 0.5], ['deadtree', 0.72], ['rock', 0.82], ['gfence', 1]]},
+  desert: {n:160, set:[['cactus', 0.3], ['pillar', 0.52], ['rock', 0.78], ['skull', 1]]},
+  lair:   {n:210, set:[['spike', 0.3], ['goldpile', 0.5], ['rock2', 0.7], ['crystal', 0.86], ['skull', 1]], col:'#ff4a3a'},
+};
+function bakeExtra(M, c, R, cw, ch, dec, avoid, free, path){
+  const th = M.theme, sc = (n, fn) => { for(let i = 0; i < n; i++) fn(R() * cw, R() * ch); };
+  if(th === 'snow'){
+    for(let i = 0; i < 10; i++){ const x = R() * cw, y = R() * ch, rx = 60 + R() * 90, ry = 30 + R() * 40;
+      c.fillStyle = '#8fb4cc'; ell(c, x, y, rx, ry); c.fill(); c.fillStyle = '#b4d4e8'; ell(c, x - rx * 0.12, y - ry * 0.18, rx * 0.72, ry * 0.58); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x - rx * 0.5, y - ry * 0.1); c.lineTo(x - rx * 0.1, y - ry * 0.35); c.stroke(); }
+    sc(M.w * M.h * 0.3, (x, y) => { c.fillStyle = 'rgba(110,140,170,.16)'; ell(c, x, y, 8 + R() * 14, 3 + R() * 4); c.fill(); });
+    sc(M.w * M.h * 0.3, (x, y) => { c.fillStyle = 'rgba(255,255,255,.8)'; c.fillRect(x, y, 1.5, 1.5); });
+  } else if(th === 'grave'){
+    sc(M.w * M.h * 0.5, (x, y) => { c.fillStyle = R() < 0.5 ? 'rgba(14,16,12,.5)' : 'rgba(70,80,60,.22)'; ell(c, x, y, 10 + R() * 30, 6 + R() * 14); c.fill(); });
+    const trail = []; for(let x = 0; x <= M.w; x++) trail.push([x * TILE, (M.h / 2 + Math.sin(x * 0.3) * 3) * TILE]);
+    path(trail, 46, '#3a3630', '#22201c');
+    sc(M.w * M.h * 0.6, (x, y) => { c.strokeStyle = 'rgba(60,70,40,.5)'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x, y); c.lineTo(x - 1.5, y - 5); c.moveTo(x, y); c.lineTo(x + 2, y - 5); c.stroke(); });
+  } else if(th === 'desert'){
+    c.strokeStyle = 'rgba(130,90,40,.25)'; c.lineWidth = 2;
+    for(let i = 0; i < M.w * M.h * 0.2; i++){ const x = R() * cw, y = R() * ch, w = 30 + R() * 60; c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + w / 2, y - 6 - R() * 6, x + w, y); c.stroke(); }
+    sc(M.w * M.h * 0.4, (x, y) => { c.fillStyle = 'rgba(110,70,30,.35)'; ell(c, x, y, 1.5 + R() * 2, 1 + R() * 1.5); c.fill(); });
+    for(let i = 0; i < 7; i++){ const x0 = cw * (0.1 + R() * 0.7), y0 = ch * (0.15 + R() * 0.7);
+      for(let gx = -3; gx <= 3; gx++) for(let gy = -2; gy <= 2; gy++){ if(R() < 0.35) continue; c.fillStyle = R() < 0.5 ? '#b08a58' : '#a88252'; c.fillRect(x0 + gx * 26, y0 + gy * 20, 24, 18); c.strokeStyle = 'rgba(80,50,20,.4)'; c.lineWidth = 1; c.strokeRect(x0 + gx * 26, y0 + gy * 20, 24, 18); } }
+  } else if(th === 'lair'){
+    c.strokeStyle = 'rgba(255,60,20,.35)'; c.lineWidth = 1.6;
+    for(let i = 0; i < 140; i++){ let x = R() * cw, y = R() * ch; c.beginPath(); c.moveTo(x, y); for(let k = 0; k < 3; k++){ x += (R() - 0.5) * 40; y += (R() - 0.5) * 24; c.lineTo(x, y); } c.stroke(); }
+    sc(M.w * M.h * 0.25, (x, y) => { c.fillStyle = R() < 0.5 ? '#c99a2a' : '#8a6a1a'; ell(c, x, y, 2.2, 1.4); c.fill(); });
+  } else if(th === 'tower'){
+    for(let y = 0; y < M.h; y++) for(let x = 0; x < M.w; x++){ c.fillStyle = (x + y) % 2 ? '#2c2c36' : '#32323c'; c.fillRect(x * TILE + 2, y * TILE + 2, TILE - 4, TILE - 4); }
+    const cx = cw / 2, cy = ch / 2 - TILE;
+    c.strokeStyle = '#5a8aff'; c.shadowColor = '#5a8aff'; c.shadowBlur = 14; c.lineWidth = 3;
+    ell(c, cx, cy, 200, 130); c.stroke(); ell(c, cx, cy, 140, 90); c.stroke();
+    for(let k = 0; k < 8; k++){ const a = k * PI2 / 8; c.beginPath(); c.moveTo(cx + Math.cos(a) * 140, cy + Math.sin(a) * 90); c.lineTo(cx + Math.cos(a) * 200, cy + Math.sin(a) * 130); c.stroke(); }
+    c.shadowBlur = 0;
+    c.fillStyle = '#15151c'; c.fillRect(0, 0, cw, TILE * 1.2); c.fillRect(0, 0, TILE * 0.8, ch); c.fillRect(cw - TILE * 0.8, 0, TILE * 0.8, ch);
+    for(let x = 1.5; x < M.w; x += 3){ dec.push({t:'pillar', x:x * TILE, y:1.4 * TILE, s:1.1, v:R()}); }
+    for(const [x, y] of [[1.3, 3], [M.w - 1.3, 3], [1.3, M.h - 2], [M.w - 1.3, M.h - 2]]) dec.push({t:'torch', x:x * TILE, y:y * TILE, s:1, v:R()});
+    return;
+  }
+  // 首領祭壇
+  const be = M.monsters.find(e => MT[e[0]].elite);
+  if(be && M.altar){
+    const ax = (be[2] + be[3]) / 2 * cw, ay = ch / 2;
+    c.fillStyle = 'rgba(0,0,0,.35)'; ell(c, ax, ay, 220, 150); c.fill();
+    c.strokeStyle = M.altar; c.lineWidth = 3; c.shadowColor = M.altar; c.shadowBlur = 14;
+    ell(c, ax, ay, 190, 125); c.stroke(); ell(c, ax, ay, 130, 85); c.stroke();
+    for(let k = 0; k < 6; k++){ const a = k * PI2 / 6; c.beginPath(); c.moveTo(ax + Math.cos(a) * 130, ay + Math.sin(a) * 85); c.lineTo(ax + Math.cos(a + 2.094) * 130, ay + Math.sin(a + 2.094) * 85); c.stroke(); }
+    c.shadowBlur = 0; avoid.push({x:ax, y:ay, r:230});
+  }
+  const DS = DECOSET[th]; if(!DS) return;
+  for(let i = 0; i < DS.n; i++){
+    let x = R() * cw, y = R() * ch;
+    if(R() < 0.5){ if(R() < 0.5) x = R() < 0.5 ? R() * 1.6 * TILE : cw - R() * 1.6 * TILE; else y = R() < 0.5 ? R() * 1.6 * TILE : ch - R() * 1.2 * TILE; }
+    if(!free(x, y)) continue;
+    const r = R(), t = DS.set.find(e => r < e[1])[0];
+    dec.push({t, x, y, s:0.8 + R() * 0.5, v:R(), col:DS.col});
+  }
+}
+function drawDecoExtra(c, o, s){
+  switch(o.t){
+    case 'snowpine': {
+      const k = s * 1.3;
+      c.fillStyle = 'rgba(40,60,90,.25)'; ell(c, 0, 0, 20 * k, 7 * k); c.fill();
+      c.fillStyle = '#2e1e14'; c.fillRect(-3.5 * k, -16 * k, 7 * k, 17 * k);
+      for(let i = 0; i < 4; i++){
+        const yb = -12 * k - i * 14 * k, wd = (24 - i * 4.5) * k;
+        c.fillStyle = '#1a3a32'; c.beginPath(); c.moveTo(-wd, yb); c.lineTo(0, yb - 30 * k); c.lineTo(wd, yb); c.closePath(); c.fill();
+        c.fillStyle = '#eef4fa'; c.beginPath(); c.moveTo(-wd * 0.55, yb - 13 * k); c.lineTo(0, yb - 30 * k); c.lineTo(wd * 0.55, yb - 13 * k); c.quadraticCurveTo(0, yb - 9 * k, -wd * 0.55, yb - 13 * k); c.fill();
+      }
+      break;
+    }
+    case 'tomb':
+      c.fillStyle = 'rgba(0,0,0,.35)'; ell(c, 0, 0, 16 * s, 5 * s); c.fill();
+      c.fillStyle = '#5a5a58'; c.beginPath(); c.moveTo(-11 * s, 0); c.lineTo(-11 * s, -24 * s); c.arc(0, -24 * s, 11 * s, Math.PI, 0); c.lineTo(11 * s, 0); c.closePath(); c.fill();
+      c.fillStyle = '#6e6e6a'; c.fillRect(-11 * s, -24 * s, 4 * s, 24 * s);
+      c.strokeStyle = '#2e2e2c'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(0, -30 * s); c.lineTo(0, -14 * s); c.moveTo(-5 * s, -24 * s); c.lineTo(5 * s, -24 * s); c.stroke();
+      c.fillStyle = 'rgba(70,100,50,.6)'; ell(c, 6 * s, -3 * s, 6 * s, 3 * s); c.fill();
+      break;
+    case 'cross':
+      c.fillStyle = 'rgba(0,0,0,.35)'; ell(c, 0, 0, 10 * s, 4 * s); c.fill();
+      c.fillStyle = '#3a2e24'; c.fillRect(-2.5 * s, -40 * s, 5 * s, 40 * s); c.fillRect(-11 * s, -31 * s, 22 * s, 5 * s);
+      c.fillStyle = '#4a3a2a'; c.fillRect(-2.5 * s, -40 * s, 2 * s, 40 * s);
+      break;
+    case 'gfence':
+      c.fillStyle = '#16161a';
+      for(let k = -3; k <= 3; k++){ c.fillRect(k * 9 - 1.2, -30, 2.4, 30); c.beginPath(); c.moveTo(k * 9 - 3, -30); c.lineTo(k * 9, -37); c.lineTo(k * 9 + 3, -30); c.fill(); }
+      c.fillRect(-30, -24, 60, 2.5); c.fillRect(-30, -8, 60, 2.5);
+      break;
+    case 'cactus': {
+      const k = s * 1.2;
+      c.fillStyle = 'rgba(90,60,20,.3)'; ell(c, 0, 0, 14 * k, 4 * k); c.fill();
+      c.strokeStyle = '#3e6a2e'; c.lineCap = 'round'; c.lineWidth = 10 * k;
+      c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -48 * k); c.stroke();
+      c.lineWidth = 6.5 * k; c.beginPath(); c.moveTo(0, -22 * k); c.lineTo(-12 * k, -22 * k); c.lineTo(-12 * k, -38 * k); c.moveTo(0, -30 * k); c.lineTo(11 * k, -30 * k); c.lineTo(11 * k, -42 * k); c.stroke();
+      c.strokeStyle = 'rgba(160,210,120,.35)'; c.lineWidth = 2 * k; c.beginPath(); c.moveTo(2 * k, -4 * k); c.lineTo(2 * k, -46 * k); c.stroke();
+      break;
+    }
+    case 'pillar': {
+      const tw = mapId === 'tower', col = tw ? '#3e3e4a' : '#b8925e', hh = tw ? 70 : (30 + o.v * 40);
+      c.fillStyle = 'rgba(0,0,0,.3)'; ell(c, 0, 0, 16 * s, 5 * s); c.fill();
+      const g = c.createLinearGradient(-10 * s, 0, 10 * s, 0); g.addColorStop(0, shade(col, -35)); g.addColorStop(0.6, col); g.addColorStop(1, shade(col, 20));
+      c.fillStyle = shade(col, -20); c.fillRect(-13 * s, -6 * s, 26 * s, 6 * s);
+      c.fillStyle = g; c.fillRect(-9 * s, -hh * s, 18 * s, (hh - 6) * s);
+      c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 1; for(const dx of [-4, 1, 6]){ c.beginPath(); c.moveTo(dx * s, -hh * s); c.lineTo(dx * s, -6 * s); c.stroke(); }
+      if(tw || o.v > 0.6){ c.fillStyle = shade(col, -10); c.fillRect(-12 * s, -(hh + 5) * s, 24 * s, 6 * s); }
+      else { c.fillStyle = col; c.beginPath(); c.moveTo(-9 * s, -hh * s); c.lineTo(-3 * s, -(hh + 6) * s); c.lineTo(3 * s, -(hh - 2) * s); c.lineTo(9 * s, -(hh + 4) * s); c.lineTo(9 * s, -hh * s); c.fill(); }
+      break;
+    }
+    case 'skull':
+      c.fillStyle = '#d8d0bc'; ell(c, 0, -5 * s, 7 * s, 5.5 * s); c.fill(); c.fillRect(-4 * s, -2 * s, 8 * s, 3 * s);
+      c.fillStyle = '#2a2018'; ell(c, -2.6 * s, -5 * s, 1.8 * s, 1.8 * s); c.fill(); ell(c, 2.6 * s, -5 * s, 1.8 * s, 1.8 * s); c.fill();
+      c.strokeStyle = '#d8d0bc'; c.lineWidth = 2; c.beginPath(); c.moveTo(-6 * s, -8 * s); c.quadraticCurveTo(-14 * s, -10 * s, -15 * s, -18 * s); c.moveTo(6 * s, -8 * s); c.quadraticCurveTo(14 * s, -10 * s, 15 * s, -18 * s); c.stroke();
+      break;
+    case 'goldpile': {
+      c.fillStyle = 'rgba(0,0,0,.35)'; ell(c, 0, 0, 24 * s, 7 * s); c.fill();
+      const g = c.createRadialGradient(-4 * s, -14 * s, 2, 0, -6 * s, 26 * s); g.addColorStop(0, '#fff2a0'); g.addColorStop(0.5, '#d8a830'); g.addColorStop(1, '#7a5410');
+      c.fillStyle = g; c.beginPath(); c.moveTo(-24 * s, 0); c.quadraticCurveTo(-10 * s, -26 * s, 0, -24 * s); c.quadraticCurveTo(12 * s, -26 * s, 24 * s, 0); c.closePath(); c.fill();
+      if(Math.sin(gt * 3 + o.v * 20) > 0.92){ c.fillStyle = '#fff'; drawStar(c, (o.v - 0.5) * 24 * s, -14 * s, 4, 1.2); }
+      break;
+    }
+  }
+}
+
+// ---- 新怪物外觀 ----
+function drawMonsterExtra(c, m, d, t, f){
+  const k = d.scale || 1;
+  switch(d.draw){
+    case 'ghost': {
+      c.scale(f, 1); c.translate(0, -18 + Math.sin(t * 3) * 4);
+      const g = c.createLinearGradient(0, -44, 0, 10); g.addColorStop(0, 'rgba(170,200,210,.85)'); g.addColorStop(1, 'rgba(120,160,170,0)');
+      c.fillStyle = g; c.beginPath(); c.moveTo(-12, -30); c.quadraticCurveTo(-14, -48, 0, -48); c.quadraticCurveTo(14, -48, 13, -30);
+      for(let i = 0; i < 4; i++){ c.quadraticCurveTo(13 - i * 7 - 2, 8 + Math.sin(t * 6 + i) * 4, 13 - (i + 1) * 6.5, 2); }
+      c.closePath(); c.fill();
+      c.fillStyle = '#10181a'; ell(c, 3, -34, 8, 9); c.fill();
+      c.fillStyle = '#7aff9a'; c.shadowColor = '#7aff9a'; c.shadowBlur = 10; ell(c, 1, -35, 1.8, 2.4); c.fill(); ell(c, 6.5, -35, 1.8, 2.4); c.fill(); c.shadowBlur = 0;
+      c.strokeStyle = 'rgba(170,200,210,.6)'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(10, -26); c.quadraticCurveTo(22, -22 - m.atkAnim * 10, 26, -14); c.stroke();
+      break;
+    }
+    case 'scorpion': {
+      c.scale(f, 1);
+      const lg = m.moving ? Math.sin(t * 14) * 3 : 0;
+      c.strokeStyle = shade(d.color, -40); c.lineWidth = 2.2; c.lineCap = 'round';
+      for(let i = 0; i < 4; i++){ const x = -10 + i * 6; c.beginPath(); c.moveTo(x, -9); c.lineTo(x - 6 + (i % 2 ? lg : -lg), -14); c.lineTo(x - 9, 0); c.moveTo(x, -9); c.lineTo(x + 3 + (i % 2 ? -lg : lg), -2); c.lineTo(x + 1, 0); c.stroke(); }
+      const sw = Math.sin(t * 3) * 3, st = m.atkAnim * 14;
+      c.strokeStyle = d.color; c.lineWidth = 6;
+      c.beginPath(); c.moveTo(-14, -12); c.quadraticCurveTo(-30, -24 + sw, -22, -40); c.quadraticCurveTo(-12, -52 + st * 0.3, -2 + st, -42 + st * 0.5); c.stroke();
+      c.fillStyle = shade(d.color, -50); c.beginPath(); c.moveTo(-2 + st, -46 + st * 0.5); c.lineTo(8 + st, -38 + st * 0.5); c.lineTo(-1 + st, -38 + st * 0.5); c.closePath(); c.fill();
+      c.fillStyle = d.color; ell(c, -6, -11, 14, 7); c.fill(); ell(c, 10, -11, 8, 6); c.fill();
+      c.fillStyle = shade(d.color, 25); ell(c, -6, -14, 10, 3); c.fill();
+      for(const yy of [-17, -6]){ c.strokeStyle = d.color; c.lineWidth = 3.5; c.beginPath(); c.moveTo(14, -11); c.lineTo(22, yy); c.stroke();
+        c.fillStyle = shade(d.color, -15); c.beginPath(); c.ellipse(26, yy, 6, 3.5, 0, 0, PI2); c.fill(); c.fillStyle = '#2a1a0a'; c.fillRect(27, yy - 0.6, 6, 1.2); }
+      c.fillStyle = '#111'; ell(c, 15, -14, 1.4, 1.4); c.fill();
+      break;
+    }
+    case 'worm': {
+      c.scale(f, 1);
+      c.fillStyle = '#8a6a3a'; ell(c, 0, 0, 56, 16); c.fill(); c.fillStyle = '#a8845a'; ell(c, 0, -3, 44, 10); c.fill();
+      const sw = Math.sin(t * 1.6) * 10 + (m.atkAnim > 0 ? 18 * m.atkAnim : 0);
+      for(let i = 0; i < 9; i++){
+        const q = i / 8, x = Math.sin(q * 2.2) * sw * q, y = -q * 120, r = 26 - q * 8;
+        c.fillStyle = i % 2 ? d.color : shade(d.color, -22); ell(c, x, y, r, r * 0.8); c.fill();
+        c.fillStyle = 'rgba(255,230,180,.15)'; ell(c, x + r * 0.3, y - r * 0.2, r * 0.4, r * 0.25); c.fill();
+      }
+      const hx = Math.sin(2.2) * sw + 10, hy = -126;
+      c.fillStyle = shade(d.color, -30); ell(c, hx, hy, 22, 18); c.fill();
+      c.fillStyle = '#3a0a0a'; ell(c, hx + 8, hy, 12, 14); c.fill();
+      c.fillStyle = '#f0e8d0'; for(let a = 0; a < PI2; a += PI2 / 10){ c.beginPath(); c.moveTo(hx + 8 + Math.cos(a) * 12, hy + Math.sin(a) * 14); c.lineTo(hx + 8 + Math.cos(a) * 6, hy + Math.sin(a) * 7); c.lineTo(hx + 8 + Math.cos(a + 0.3) * 12, hy + Math.sin(a + 0.3) * 14); c.fill(); }
+      if(Math.random() < 0.3) parts.push({x:m.x + rand(-50, 50), y:m.y - rand(0, 8), vx:rand(-30, 30), vy:rand(-50, -20), life:0.6, t:0, color:'#c8a46a', size:rand(2, 4), g:80});
+      break;
+    }
+    case 'drake': {
+      c.scale(f * k, k);
+      const fl = Math.sin(t * (m.moving ? 9 : 4)), lg = m.moving ? Math.sin(t * 10) * 4 : 0, col = d.color;
+      c.fillStyle = shade(col, -35);
+      c.beginPath(); c.moveTo(-2, -30); c.quadraticCurveTo(-18, -62 - fl * 10, -40, -58 - fl * 12); c.lineTo(-30, -44); c.lineTo(-26, -48); c.lineTo(-18, -36); c.lineTo(-12, -40); c.closePath(); c.fill();
+      c.strokeStyle = col; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(-14, -20); c.quadraticCurveTo(-34, -20, -40, -6 + Math.sin(t * 3) * 4); c.stroke();
+      c.lineWidth = 5; c.strokeStyle = shade(col, -20); c.beginPath(); c.moveTo(-10, -16); c.lineTo(-12 + lg, 0); c.moveTo(8, -16); c.lineTo(10 - lg, 0); c.stroke();
+      const bg = c.createLinearGradient(0, -36, 0, -10); bg.addColorStop(0, shade(col, 15)); bg.addColorStop(1, shade(col, -35));
+      c.fillStyle = bg; ell(c, 0, -22, 18, 11); c.fill();
+      c.fillStyle = '#e8b060'; ell(c, 4, -15, 10, 4); c.fill();
+      c.strokeStyle = col; c.lineWidth = 6; c.beginPath(); c.moveTo(12, -26); c.quadraticCurveTo(20, -40, 22, -46); c.stroke();
+      c.fillStyle = col; c.beginPath(); c.moveTo(16, -52); c.lineTo(38, -46); c.lineTo(36, -41); c.lineTo(18, -40); c.closePath(); c.fill();
+      c.fillStyle = '#d8ccb0'; c.beginPath(); c.moveTo(19, -51); c.lineTo(10, -62); c.lineTo(22, -53); c.closePath(); c.fill();
+      c.fillStyle = shade(col, 20); c.beginPath(); c.moveTo(-2, -32); c.quadraticCurveTo(-8, -66 - fl * 12, -26, -70 - fl * 14); c.lineTo(-18, -54); c.lineTo(-12, -58); c.lineTo(-6, -44); c.closePath(); c.fill();
+      c.fillStyle = '#ffcf33'; c.shadowColor = '#ffcf33'; c.shadowBlur = 8; c.beginPath(); c.moveTo(24, -49); c.lineTo(29, -48); c.lineTo(24, -46.5); c.closePath(); c.fill(); c.shadowBlur = 0;
+      if(m.atkAnim > 0.3) { c.fillStyle = 'rgba(255,140,40,.7)'; ell(c, 42, -44, 6, 4); c.fill(); }
+      break;
+    }
+    case 'yeti': {
+      c.scale(f, 1);
+      const sw = m.moving ? Math.sin(t * 7) * 0.4 : 0, lg = m.moving ? Math.sin(t * 7) * 4 : 0;
+      c.fillStyle = '#c8d2dc'; ell(c, -8 + lg, -8, 7, 9); c.fill(); ell(c, 8 - lg, -8, 7, 9); c.fill();
+      const g = c.createLinearGradient(-22, 0, 22, 0); g.addColorStop(0, '#b8c4d0'); g.addColorStop(0.6, d.color); g.addColorStop(1, '#ffffff');
+      c.fillStyle = g; ell(c, 0, -34, 22, 26); c.fill();
+      c.save(); c.translate(-18, -48); c.rotate(-sw); c.fillStyle = '#d0dae4'; ell(c, 0, 16, 7, 18); c.fill(); c.restore();
+      c.save(); c.translate(18, -48); c.rotate(sw - (m.atkAnim > 0 ? 1.4 * m.atkAnim : 0)); c.fillStyle = '#e8eef4'; ell(c, 0, 16, 7, 18); c.fill(); c.fillStyle = '#7a8a9a'; ell(c, 0, 32, 5, 4); c.fill(); c.restore();
+      c.fillStyle = d.color; c.beginPath(); c.arc(6, -62, 13, 0, PI2); c.fill();
+      c.fillStyle = '#7a8a9a'; ell(c, 10, -60, 7, 7); c.fill();
+      c.fillStyle = '#1a2a3a'; ell(c, 8, -62, 1.6, 1.6); c.fill(); ell(c, 13, -62, 1.6, 1.6); c.fill();
+      c.fillStyle = '#fff'; c.beginPath(); c.moveTo(8, -56); c.lineTo(9, -53); c.lineTo(10, -56); c.moveTo(12, -56); c.lineTo(13, -53); c.lineTo(14, -56); c.fill();
+      c.strokeStyle = 'rgba(150,170,190,.6)'; c.lineWidth = 1; for(let i = 0; i < 8; i++){ const a = -2.6 + i * 0.3; c.beginPath(); c.moveTo(Math.cos(a) * 18, -34 + Math.sin(a) * 22); c.lineTo(Math.cos(a) * 22, -34 + Math.sin(a) * 26); c.stroke(); }
+      break;
+    }
+    case 'goblin': {
+      c.scale(f, 1);
+      const hop = m.moving ? -Math.abs(Math.sin(t * 14)) * 4 : 0; c.translate(0, hop);
+      c.fillStyle = '#7a5a2a'; ell(c, -10, -24, 13, 14); c.fill();
+      c.strokeStyle = '#4a3418'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-18, -32); c.quadraticCurveTo(-10, -38, -2, -32); c.stroke();
+      c.fillStyle = '#ffd76a'; c.shadowColor = '#ffd76a'; c.shadowBlur = 10; ell(c, -10, -37, 6, 3); c.fill(); c.shadowBlur = 0;
+      c.strokeStyle = d.color; c.lineWidth = 3.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-1, -12); c.lineTo(-3 + (m.moving ? Math.sin(t * 14) * 4 : 0), 0); c.moveTo(4, -12); c.lineTo(6 - (m.moving ? Math.sin(t * 14) * 4 : 0), 0); c.stroke();
+      c.fillStyle = '#5a3a2a'; ell(c, 2, -17, 7, 8); c.fill();
+      c.fillStyle = d.color; c.beginPath(); c.arc(6, -30, 8, 0, PI2); c.fill();
+      c.beginPath(); c.moveTo(1, -33); c.lineTo(-7, -40); c.lineTo(3, -36); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(12, -29); c.lineTo(17, -26); c.lineTo(12, -25); c.closePath(); c.fill();
+      c.fillStyle = '#ffe066'; ell(c, 9, -32, 1.6, 1.6); c.fill();
+      break;
+    }
+  }
+}
 
 /* ================= 主迴圈 ================= */
 let last = performance.now();
@@ -2080,7 +2580,7 @@ requestAnimationFrame(loop);
 addEventListener('beforeunload', save);
 document.addEventListener('visibilitychange', () => { if(document.hidden) save(); });
 // 測試用掛鉤
-window.__game = {get P(){ return P; }, genItem, get monsters(){ return monsters; }, loadMap:(id, x, y) => loadMap(id, x, y), gainExp, useSkill, toggleAuto};
+window.__game = {get P(){ return P; }, genItem, towerStart, get TW(){ return TW; }, spawnGoblin:() => { goblinT = 0; }, get monsters(){ return monsters; }, loadMap:(id, x, y) => loadMap(id, x, y), gainExp, useSkill, toggleAuto};
 </script>
 </body>
 </html>
