@@ -6,6 +6,7 @@
 <title>Q萌英雄傳</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:dark;--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);--st:env(safe-area-inset-top,0px);--sbm:env(safe-area-inset-bottom,0px)}
 html,body{width:100%;height:100%;overflow:hidden;background:#121018;color:#fff;
   font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Noto Sans CJK TC",sans-serif;
   user-select:none;-webkit-user-select:none;touch-action:none}
@@ -14,7 +15,7 @@ canvas#game{position:fixed;inset:0;display:block}
 button{font-family:inherit;cursor:pointer}
 #ui{position:fixed;inset:0;pointer-events:none}
 .box{background:rgba(22,16,32,.78);border:2px solid #c9a24a;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.45)}
-#status{position:absolute;left:10px;top:10px;display:flex;gap:8px;padding:8px 10px;pointer-events:auto}
+#status{position:absolute;left:calc(10px + var(--sl));top:calc(10px + var(--st));display:flex;gap:8px;padding:8px 10px;pointer-events:auto}
 #portrait{width:58px;height:58px;border-radius:50%;background:radial-gradient(#5a4a78,#2a2038);border:2px solid #f0d27a}
 #stName{font-weight:bold;font-size:14px;margin-bottom:3px;white-space:nowrap}
 #stName .lv{color:#ffd76a;margin-right:4px}
@@ -26,18 +27,18 @@ button{font-family:inherit;cursor:pointer}
 .ex .fill{background:linear-gradient(#ffe37a,#d2a02d)}
 #stGold{font-size:12px;margin-top:4px;color:#ffd76a}
 #stGold b{color:#ff9f6a;margin-left:8px}
-#mapWrap{position:absolute;right:10px;top:10px;padding:6px;text-align:center;pointer-events:auto}
+#mapWrap{position:absolute;right:calc(10px + var(--sr));top:calc(10px + var(--st));padding:6px;text-align:center;pointer-events:auto}
 #mapName{font-size:13px;font-weight:bold;color:#ffe9a8;margin-bottom:4px}
 #mini{display:block;border-radius:8px;background:#000}
-#quest{position:absolute;right:10px;top:170px;width:170px;padding:8px 10px;font-size:12px;line-height:1.5}
+#quest{position:absolute;right:calc(10px + var(--sr));top:calc(170px + var(--st));width:170px;padding:8px 10px;font-size:12px;line-height:1.5}
 #quest .qt{color:#ffd76a;font-weight:bold}
 #quest .ok{color:#7dff8a}
-#target{position:absolute;left:50%;top:10px;transform:translateX(-50%);padding:5px 14px;text-align:center;min-width:200px}
+#target{position:absolute;left:50%;top:calc(10px + var(--st));transform:translateX(-50%);padding:5px 14px;text-align:center;min-width:200px}
 #target .nm{font-size:13px;font-weight:bold}
 #target .bar{width:200px}
-#log{position:absolute;left:10px;bottom:96px;width:min(340px,60vw);font-size:12px;line-height:1.55;text-shadow:0 0 3px #000,0 0 3px #000}
+#log{position:absolute;left:calc(10px + var(--sl));bottom:calc(96px + var(--sbm));width:min(340px,60vw);font-size:12px;line-height:1.55;text-shadow:0 0 3px #000,0 0 3px #000}
 #log div{opacity:.95}
-#skillbar{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:8px;padding:8px 10px;pointer-events:auto}
+#skillbar{position:absolute;left:50%;bottom:calc(12px + var(--sbm));transform:translateX(-50%);display:flex;gap:8px;padding:8px 10px;pointer-events:auto}
 .sk{position:relative;width:56px;height:56px;border-radius:12px;border:2px solid #8a7040;background:linear-gradient(#4a3a5e,#2a2038);
   color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:manipulation}
 .sk:active{transform:scale(.94)}
@@ -47,7 +48,7 @@ button{font-family:inherit;cursor:pointer}
 .sk .cdt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;text-shadow:0 0 3px #000;pointer-events:none}
 .sk.lock{filter:grayscale(1);opacity:.55}
 .sk .nm2{position:absolute;bottom:-1px;left:0;right:0;font-size:9px;text-align:center;color:#ddd;text-shadow:0 0 2px #000}
-#side{position:absolute;right:10px;bottom:12px;display:flex;flex-direction:column;gap:8px;pointer-events:auto}
+#side{position:absolute;right:calc(10px + var(--sr));bottom:calc(12px + var(--sbm));display:flex;flex-direction:column;gap:8px;pointer-events:auto}
 .sb{width:62px;height:46px;border-radius:12px;border:2px solid #c9a24a;background:linear-gradient(#6b4e2e,#3c2a18);color:#ffe9a8;font-size:13px;font-weight:bold;line-height:1.1;touch-action:manipulation}
 .sb small{display:block;font-size:9px;color:#d8c08a;font-weight:normal}
 .sb.on{background:linear-gradient(#3aa55a,#1e6a33);border-color:#9dff9d;color:#fff;box-shadow:0 0 12px #5f5}
@@ -96,14 +97,14 @@ button{font-family:inherit;cursor:pointer}
 #death p{margin:10px 0 18px;color:#ffd}
 @media (max-width:640px){
   .bar{width:120px}
-  #quest{top:150px;width:140px;font-size:11px}
+  #quest{top:calc(150px + var(--st));width:140px;font-size:11px}
   #mini{width:120px;height:90px}
   .sk{width:48px;height:48px;font-size:20px}
   #skillbar{gap:5px;padding:6px}
-  #log{bottom:80px;font-size:11px}
+  #log{bottom:calc(80px + var(--sbm));font-size:11px}
   .sb{width:54px;height:42px;font-size:12px}
-  #target{top:auto;bottom:84px}
-  #side{bottom:84px}
+  #target{top:auto;bottom:calc(84px + var(--sbm))}
+  #side{bottom:calc(84px + var(--sbm))}
 }
 </style>
 </head>
@@ -1835,9 +1836,10 @@ function startGame(d){
   msg(`歡迎來到 Q萌英雄傳，${P.name}！`, '#ffe066');
   if(P.quest.i === 0 && !P.quest.acc) msg('先去找頭上有「!」的村長·老莫接任務吧！', '#9fe');
 }
+let overwriteArmed = false;
 $('bStart').onclick = () => {
   let name = $('nameIn').value.trim() || ['小萌', '阿呆', '豆豆', '糖糖', '布丁'][randi(0, 4)] + CLASSES[selCls].name;
-  if(loadSave() && !confirm('建立新角色會覆蓋現有存檔，確定嗎？')) return;
+  if(loadSave() && !overwriteArmed){ overwriteArmed = true; $('bStart').textContent = '會覆蓋現有存檔，再按一次確認'; $('bStart').classList.replace('g', 'r'); return; }
   const p = newPlayer(name, selCls);
   startGame(p); save();
 };
