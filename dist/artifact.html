@@ -1,105 +1,126 @@
-<title>Q萌英雄傳</title>
+<title>烈焰英雄傳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&display=swap">
 <style>
+/* 暗鐵與燙金：黑鐵面板、細金邊、襯線標題 */
 *{box-sizing:border-box;margin:0;padding:0}
-:root{color-scheme:dark;--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);--st:env(safe-area-inset-top,0px);--sbm:env(safe-area-inset-bottom,0px)}
-html,body{width:100%;height:100%;overflow:hidden;background:#121018;color:#fff;
-  font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Noto Sans CJK TC",sans-serif;
+:root{color-scheme:dark;
+  --sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);--st:env(safe-area-inset-top,0px);--sbm:env(safe-area-inset-bottom,0px);
+  --iron:#141317;--iron2:#1e1c22;--edge:#5a4a2c;--gold:#d9b25f;--gold2:#f3dca0;--ember:#e0662a;--text:#ece6da;--muted:#9a9488;
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Noto Sans CJK TC",sans-serif}
+html,body{width:100%;height:100%;overflow:hidden;background:#0b0a0d;color:var(--text);font-family:var(--sans);
   user-select:none;-webkit-user-select:none;touch-action:none}
 canvas#game{position:fixed;inset:0;display:block}
 .hidden{display:none!important}
 button{font-family:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
 #ui{position:fixed;inset:0;pointer-events:none}
-.box{background:rgba(22,16,32,.78);border:2px solid #c9a24a;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.45)}
-#status{position:absolute;left:calc(10px + var(--sl));top:calc(10px + var(--st));display:flex;gap:8px;padding:8px 10px;pointer-events:auto}
-#portrait{width:58px;height:58px;border-radius:50%;background:radial-gradient(#5a4a78,#2a2038);border:2px solid #f0d27a}
-#stName{font-weight:bold;font-size:14px;margin-bottom:3px;white-space:nowrap}
-#stName .lv{color:#ffd76a;margin-right:4px}
-.bar{width:170px;height:13px;background:#2a2230;border-radius:7px;position:relative;overflow:hidden;margin-top:3px;border:1px solid rgba(0,0,0,.6)}
+.box{background:linear-gradient(180deg,rgba(30,28,34,.92),rgba(14,13,17,.92));border:1px solid var(--edge);border-radius:3px;
+  box-shadow:inset 0 0 0 1px rgba(243,220,160,.08),0 6px 18px rgba(0,0,0,.55)}
+#status{position:absolute;left:calc(10px + var(--sl));top:calc(10px + var(--st));display:flex;gap:10px;padding:8px 12px 8px 8px;pointer-events:auto}
+#portrait{width:60px;height:60px;border-radius:2px;background:radial-gradient(circle at 50% 40%,#3a2e26,#121014);border:1px solid var(--gold)}
+#stName{font-family:var(--serif);font-weight:900;font-size:15px;margin-bottom:3px;white-space:nowrap;letter-spacing:1px}
+#stName .lv{color:var(--gold);margin-right:6px}
+.bar{width:176px;height:11px;background:#08070a;position:relative;overflow:hidden;margin-top:4px;border:1px solid #2e2a24}
 .bar .fill{height:100%;transition:width .15s}
-.bar span{position:absolute;inset:0;font-size:10px;line-height:12px;text-align:center;text-shadow:0 0 2px #000,0 0 2px #000}
-.hp .fill{background:linear-gradient(#ff7a7a,#d22d2d)}
-.mp .fill{background:linear-gradient(#7ab8ff,#2d5fd2)}
-.ex .fill{background:linear-gradient(#ffe37a,#d2a02d)}
-#stGold{font-size:12px;margin-top:4px;color:#ffd76a}
-#stGold b{color:#ff9f6a;margin-left:8px}
+.bar span{position:absolute;inset:0;font-size:9.5px;line-height:10px;text-align:center;text-shadow:0 0 2px #000,0 0 2px #000;font-variant-numeric:tabular-nums}
+.hp .fill{background:linear-gradient(#e0504a,#7a1612)}
+.mp .fill{background:linear-gradient(#4a8ae0,#152e7a)}
+.ex .fill{background:linear-gradient(#e8c060,#7a5a12)}
+#stGold{font-size:12px;margin-top:5px;color:var(--gold2);font-variant-numeric:tabular-nums}
+#stGold b{color:var(--ember);margin-left:10px}
 #mapWrap{position:absolute;right:calc(10px + var(--sr));top:calc(10px + var(--st));padding:6px;text-align:center;pointer-events:auto}
-#mapName{font-size:13px;font-weight:bold;color:#ffe9a8;margin-bottom:4px}
-#mini{display:block;border-radius:8px;background:#000}
-#quest{position:absolute;right:calc(10px + var(--sr));top:calc(170px + var(--st));width:170px;padding:8px 10px;font-size:12px;line-height:1.5}
-#quest .qt{color:#ffd76a;font-weight:bold}
-#quest .ok{color:#7dff8a}
-#target{position:absolute;left:50%;top:calc(10px + var(--st));transform:translateX(-50%);padding:5px 14px;text-align:center;min-width:200px}
-#target .nm{font-size:13px;font-weight:bold}
-#target .bar{width:200px}
+#mapName{font-family:var(--serif);font-size:13px;font-weight:900;color:var(--gold2);margin-bottom:5px;letter-spacing:1px}
+#mini{display:block;background:#000;border:1px solid #2e2a24}
+#quest{position:absolute;right:calc(10px + var(--sr));top:calc(170px + var(--st));width:172px;padding:8px 10px;font-size:12px;line-height:1.55}
+#quest .qt{color:var(--gold);font-family:var(--serif);font-weight:900;letter-spacing:1px}
+#quest .ok{color:#8ae08a}
+#target{position:absolute;left:50%;top:calc(10px + var(--st));transform:translateX(-50%);padding:5px 14px;text-align:center;min-width:220px}
+#target .nm{font-family:var(--serif);font-size:13px;font-weight:900}
+#target .bar{width:210px}
 #log{position:absolute;left:calc(10px + var(--sl));bottom:calc(96px + var(--sbm));width:min(340px,60vw);font-size:12px;line-height:1.55;text-shadow:0 0 3px #000,0 0 3px #000}
-#log div{opacity:.95}
-#skillbar{position:absolute;left:50%;bottom:calc(12px + var(--sbm));transform:translateX(-50%);display:flex;gap:8px;padding:8px 10px;pointer-events:auto}
-.sk{position:relative;width:56px;height:56px;border-radius:12px;border:2px solid #8a7040;background:linear-gradient(#4a3a5e,#2a2038);
-  color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:manipulation}
-.sk:active{transform:scale(.94)}
-.sk .key{position:absolute;left:4px;top:1px;font-size:10px;color:#ffd76a}
-.sk .cnt{position:absolute;right:4px;bottom:1px;font-size:11px;font-weight:bold;text-shadow:0 0 2px #000}
-.sk .cdm{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);pointer-events:none}
+#skillbar{position:absolute;left:50%;bottom:calc(12px + var(--sbm));transform:translateX(-50%);display:flex;gap:6px;padding:7px 8px;pointer-events:auto}
+.sk{position:relative;width:54px;height:54px;border-radius:2px;border:1px solid #6a5634;background:radial-gradient(circle at 50% 35%,#2e2a30,#121014);
+  color:#fff;font-size:23px;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:manipulation;box-shadow:inset 0 0 0 1px rgba(0,0,0,.6)}
+.sk:active{transform:scale(.95)}
+.sk .key{position:absolute;left:3px;top:1px;font-size:10px;color:var(--gold)}
+.sk .cnt{position:absolute;right:3px;bottom:1px;font-size:11px;font-weight:bold;text-shadow:0 0 2px #000}
+.sk .cdm{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);pointer-events:none}
 .sk .cdt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;text-shadow:0 0 3px #000;pointer-events:none}
-.sk.lock{filter:grayscale(1);opacity:.55}
-.sk .nm2{position:absolute;bottom:-1px;left:0;right:0;font-size:9px;text-align:center;color:#ddd;text-shadow:0 0 2px #000}
-#side{position:absolute;right:calc(10px + var(--sr));bottom:calc(12px + var(--sbm));display:flex;flex-direction:column;gap:8px;pointer-events:auto}
-.sb{width:62px;height:46px;border-radius:12px;border:2px solid #c9a24a;background:linear-gradient(#6b4e2e,#3c2a18);color:#ffe9a8;font-size:13px;font-weight:bold;line-height:1.1;touch-action:manipulation}
-.sb small{display:block;font-size:9px;color:#d8c08a;font-weight:normal}
-.sb.on{background:linear-gradient(#3aa55a,#1e6a33);border-color:#9dff9d;color:#fff;box-shadow:0 0 12px #5f5}
-#toast{position:absolute;left:50%;top:32%;transform:translateX(-50%);font-size:26px;font-weight:bold;color:#ffe066;
-  text-shadow:0 0 6px #c60,0 0 2px #000;pointer-events:none;transition:opacity .4s;opacity:0;white-space:nowrap}
-/* panels */
-#panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(620px,94vw);max-height:86vh;display:flex;flex-direction:column;z-index:10}
-#panel .ph{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #6b5426;font-weight:bold;color:#ffe9a8;font-size:16px}
-#panel .ph button{background:none;border:none;color:#ffb0b0;font-size:22px;line-height:1}
+.sk.lock{filter:grayscale(1);opacity:.5}
+.sk .nm2{position:absolute;bottom:0;left:0;right:0;font-size:9px;text-align:center;color:#cfc8ba;text-shadow:0 0 2px #000}
+#side{position:absolute;right:calc(10px + var(--sr));bottom:calc(12px + var(--sbm));display:flex;flex-direction:column;gap:6px;pointer-events:auto}
+.sb{width:62px;height:44px;border-radius:2px;border:1px solid var(--edge);background:linear-gradient(#2a2620,#14120f);color:var(--gold2);
+  font-family:var(--serif);font-size:13px;font-weight:900;line-height:1.1;letter-spacing:1px;touch-action:manipulation}
+.sb small{display:block;font-family:var(--sans);font-size:9px;color:var(--muted);font-weight:normal;letter-spacing:0}
+.sb.on{background:linear-gradient(#7a2e12,#3a1206);border-color:var(--ember);color:#fff;box-shadow:0 0 14px rgba(224,102,42,.6)}
+#toast{position:absolute;left:50%;top:30%;transform:translateX(-50%);font-family:var(--serif);font-size:28px;font-weight:900;letter-spacing:4px;color:var(--gold2);
+  text-shadow:0 0 12px rgba(224,102,42,.8),0 2px 0 #000;pointer-events:none;transition:opacity .4s;opacity:0;white-space:nowrap}
+#panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(660px,94vw);max-height:86vh;display:flex;flex-direction:column;z-index:10}
+#panel .ph{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--edge);
+  font-family:var(--serif);font-weight:900;color:var(--gold2);font-size:16px;letter-spacing:2px}
+#panel .ph button{background:none;border:none;color:var(--muted);font-size:20px;line-height:1}
+#panel .ph button:hover{color:#fff}
 #panel .pb{padding:12px 14px;overflow:auto;font-size:13px;line-height:1.6}
-.btn{background:linear-gradient(#e0b04a,#a87420);border:1px solid #ffe08a;color:#2a1a05;font-weight:bold;border-radius:8px;padding:5px 12px;margin:3px 4px 3px 0;font-size:13px}
-.btn.g{background:linear-gradient(#6fd36f,#2e8a3a);color:#fff;border-color:#b8ffb8}
-.btn.r{background:linear-gradient(#e86a6a,#a32a2a);color:#fff;border-color:#ffb8b8}
-.btn:disabled{filter:grayscale(1);opacity:.5}
-.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.12)}
-.bag{display:flex;gap:12px;flex-wrap:wrap}
-.eqcol{flex:1 1 200px}
-.invcol{flex:2 1 280px}
-.eqslots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0}
-.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
-.cell{position:relative;aspect-ratio:1;border-radius:8px;background:#1c1626;border:2px solid #3a3048;display:flex;align-items:center;justify-content:center;font-size:20px}
-.cell.sel{outline:2px solid #fff}
-.cell .en{position:absolute;right:2px;top:0;font-size:10px;color:#ffe066;font-weight:bold}
+.btn{background:linear-gradient(#c89a48,#7a5620);border:1px solid #f3dca0;color:#1a1206;font-weight:bold;border-radius:2px;padding:5px 12px;margin:3px 4px 3px 0;font-size:13px}
+.btn.g{background:linear-gradient(#3a7a3a,#1a3e1a);color:#fff;border-color:#8ac88a}
+.btn.r{background:linear-gradient(#a8401e,#5a1a0a);color:#fff;border-color:#f0a070}
+.btn:disabled{filter:grayscale(1);opacity:.45}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid rgba(217,178,95,.12)}
+.bag{display:flex;gap:14px;flex-wrap:wrap}
+.eqcol{flex:1 1 210px;min-width:0}
+.invcol{flex:2 1 280px;min-width:0}
+.heroPrev{display:flex;gap:8px;align-items:flex-end}
+.heroPrev canvas{width:110px;height:140px;background:radial-gradient(ellipse at 50% 80%,#2e2620,#0e0d10 70%);border:1px solid #2e2a24}
+.eqslots{display:grid;grid-template-columns:repeat(2,44px);gap:5px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.cell{position:relative;aspect-ratio:1;max-width:100%;border-radius:2px;background:#0e0d10;border:1px solid #2e2a24;display:flex;align-items:center;justify-content:center;font-size:20px}
+.cell.sel{outline:2px solid var(--gold2)}
+.cell .en{position:absolute;right:2px;top:0;font-size:10px;color:var(--gold2);font-weight:bold}
 .cell .up{position:absolute;left:2px;bottom:0;font-size:10px;color:#6f6}
-.cell .lab{position:absolute;bottom:0;font-size:9px;color:#998;}
-.stats{font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;background:rgba(0,0,0,.25);padding:6px 8px;border-radius:8px}
-.stats b{color:#ffd76a}
-#detail{margin-top:8px;min-height:60px;background:rgba(0,0,0,.3);border-radius:8px;padding:8px;font-size:12px}
-.npcsay{background:rgba(0,0,0,.3);border-radius:8px;padding:8px 10px;margin-bottom:8px;color:#f3e6c6}
-/* start screen */
+.cell .lab{position:absolute;bottom:1px;font-size:9px;color:#6a6458}
+.stats{font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;background:rgba(0,0,0,.35);padding:6px 8px;margin-top:8px;font-variant-numeric:tabular-nums}
+.stats b{color:var(--gold)}
+#detail{margin-top:8px;min-height:60px;background:rgba(0,0,0,.35);padding:8px;font-size:12px}
+.npcsay{background:rgba(0,0,0,.35);border-left:2px solid var(--gold);padding:8px 10px;margin-bottom:8px;color:#e8dcc4}
 #start{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;
-  background:radial-gradient(ellipse at 50% 30%,#3d2a5c 0%,#1a1226 60%,#0c0812 100%);z-index:20;overflow:auto;padding:16px}
-#start h1{font-size:clamp(34px,7vw,60px);letter-spacing:4px;color:#ffe066;text-shadow:0 0 18px #ff8a00,0 4px 0 #8a3a00}
-#start .sub{color:#d8c8ff;margin:6px 0 18px;font-size:14px}
+  background:radial-gradient(ellipse at 50% 110%,rgba(224,102,42,.35),transparent 55%),radial-gradient(ellipse at 50% 0%,#24202a,#0b0a0d 70%);
+  z-index:20;overflow:auto;padding:calc(16px + var(--st)) max(16px,var(--sr)) calc(16px + var(--sbm)) max(16px,var(--sl))}
+#start h1{font-family:var(--serif);font-weight:900;font-size:clamp(38px,8vw,68px);letter-spacing:10px;text-indent:10px;
+  background:linear-gradient(#fff4d0,#e8b04a 55%,#9a4a12);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 14px rgba(224,102,42,.55)) drop-shadow(0 3px 0 #000)}
+#start .sub{color:var(--muted);margin:6px 0 16px;font-size:13px;letter-spacing:4px}
+.gender{display:flex;margin-bottom:14px;border:1px solid var(--edge)}
+.gender button{background:#141317;color:var(--muted);border:none;padding:8px 26px;font-family:var(--serif);font-weight:900;font-size:15px;letter-spacing:3px}
+.gender button.sel{background:linear-gradient(#c89a48,#7a5620);color:#1a1206}
 .cards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.card{width:170px;padding:10px;border-radius:14px;border:2px solid #5a4878;background:rgba(30,22,44,.85);text-align:center;cursor:pointer;transition:.15s}
+.card{width:176px;padding:8px 10px 12px;border:1px solid #2e2a24;background:linear-gradient(180deg,#1a181e,#0e0d10);text-align:center;cursor:pointer;transition:transform .15s,border-color .15s}
 .card:hover{transform:translateY(-3px)}
-.card.sel{border-color:#ffd76a;box-shadow:0 0 18px rgba(255,215,106,.6)}
-.card canvas{width:120px;height:120px}
-.card h3{color:#ffe9a8;margin:4px 0}
-.card p{font-size:12px;color:#cfc4e4;line-height:1.5;min-height:36px}
-#start input{margin:16px 0 8px;padding:9px 12px;border-radius:10px;border:2px solid #c9a24a;background:#1c1626;color:#fff;font-size:16px;text-align:center;width:220px;font-family:inherit}
-#start .help{margin-top:14px;font-size:12px;color:#a99cc4;text-align:center;line-height:1.7;max-width:560px}
-#death{position:fixed;inset:0;background:rgba(60,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:15}
-#death h2{font-size:40px;color:#ff6a6a;text-shadow:0 0 10px #000}
-#death p{margin:10px 0 18px;color:#ffd}
+.card.sel{border-color:var(--gold);box-shadow:0 0 22px rgba(217,178,95,.35),inset 0 0 0 1px rgba(243,220,160,.15)}
+.card canvas{width:130px;height:150px;max-width:100%}
+.card h3{font-family:var(--serif);font-weight:900;color:var(--gold2);margin:2px 0 4px;letter-spacing:4px}
+.card p{font-size:12px;color:#b4ad9f;line-height:1.5;min-height:36px}
+#start input{margin:16px 0 8px;padding:9px 12px;border-radius:2px;border:1px solid var(--edge);background:#0e0d10;color:#fff;font-size:16px;text-align:center;width:220px;font-family:inherit}
+#start input:focus{outline:1px solid var(--gold)}
+#start .help{margin-top:14px;font-size:12px;color:#7a7468;text-align:center;line-height:1.8;max-width:560px}
+#death{position:fixed;inset:0;background:radial-gradient(ellipse,rgba(60,0,0,.5),rgba(0,0,0,.8));display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:15}
+#death h2{font-family:var(--serif);font-size:44px;font-weight:900;letter-spacing:8px;color:#d83a2a;text-shadow:0 0 16px #000}
+#death p{margin:10px 0 18px;color:#e8dcc4}
+@media (prefers-reduced-motion:reduce){.card,.bar .fill,#toast{transition:none}}
 @media (max-width:640px){
   .bar{width:120px}
   #quest{top:calc(150px + var(--st));width:140px;font-size:11px}
   #mini{width:120px;height:90px}
-  .sk{width:48px;height:48px;font-size:20px}
-  #skillbar{gap:5px;padding:6px}
+  .sk{width:46px;height:46px;font-size:19px}
+  #skillbar{gap:4px;padding:5px}
   #log{bottom:calc(80px + var(--sbm));font-size:11px}
-  .sb{width:54px;height:42px;font-size:12px}
+  .sb{width:54px;height:40px;font-size:12px}
   #target{top:auto;bottom:calc(84px + var(--sbm))}
   #side{bottom:calc(84px + var(--sbm))}
+  .card{width:31%;min-width:104px;padding:6px}
+  .card p{display:none}
 }
 </style>
 <canvas id="game"></canvas>
@@ -133,8 +154,9 @@ button{font-family:inherit;cursor:pointer}
 <div id="death" class="hidden"><h2>你已陣亡</h2><p id="deathMsg"></p><button class="btn" id="bRevive">回城復活</button></div>
 
 <div id="start">
-  <h1>Q萌英雄傳</h1>
-  <div class="sub">～ 可愛 Q 版即時打怪升級網頁遊戲 ～</div>
+  <h1>烈焰英雄傳</h1>
+  <div class="sub">即時戰鬥 · 打寶升級 · 裝備強化</div>
+  <div class="gender" id="gender"><button data-g="male" class="sel">男性角色</button><button data-g="female">女性角色</button></div>
   <div class="cards" id="cards"></div>
   <input id="nameIn" maxlength="8" placeholder="輸入角色名稱">
   <div>
@@ -144,7 +166,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="help">
     滑鼠點擊 / 手指拖曳 移動　·　點怪物自動攻擊　·　WASD / 方向鍵 也能移動<br>
     1 2 3 施放技能　·　Q 紅藥　E 藍藥　·　Z 自動掛機　·　B 背包　·　T 回城<br>
-    進度會自動存在瀏覽器中
+    角色外觀會隨身上的裝備改變　·　進度會自動存在瀏覽器中
   </div>
 </div>
 
@@ -206,11 +228,11 @@ const SKILLS = {
   ],
 };
 const MT = {
-  slime:    {name:'果凍史萊姆', lv:1,  hp:32,   atk:5,  def:0,  exp:8,    gold:[1,4],     spd:45, size:16, h:30,  passive:true, draw:'slime', color:'#6fd36f'},
-  mushroom: {name:'蘑菇怪',     lv:3,  hp:60,   atk:8,  def:1,  exp:15,   gold:[2,6],     spd:50, size:16, h:38,  draw:'mushroom', color:'#e2553f'},
-  wolf:     {name:'灰狼',       lv:6,  hp:100,  atk:12, def:3,  exp:28,   gold:[4,10],    spd:85, size:18, h:40,  draw:'wolf', color:'#8a8f99'},
+  slime:    {name:'毒液軟泥', lv:1,  hp:32,   atk:5,  def:0,  exp:8,    gold:[1,4],     spd:45, size:16, h:30,  passive:true, draw:'slime', color:'#5a9a2a'},
+  mushroom: {name:'腐菇妖',     lv:3,  hp:60,   atk:8,  def:1,  exp:15,   gold:[2,6],     spd:50, size:16, h:46,  draw:'mushroom', color:'#5a2438'},
+  wolf:     {name:'暗影狼',     lv:6,  hp:100,  atk:12, def:3,  exp:28,   gold:[4,10],    spd:85, size:20, h:48,  draw:'wolf', color:'#3e4250'},
   bat:      {name:'洞窟蝙蝠',   lv:10, hp:150,  atk:17, def:4,  exp:45,   gold:[6,14],    spd:95, size:15, h:54,  draw:'bat', color:'#7a4fa0'},
-  skeleton: {name:'骷髏兵',     lv:13, hp:250,  atk:24, def:7,  exp:72,   gold:[8,18],    spd:60, size:18, h:66,  draw:'skeleton', color:'#eeeae0'},
+  skeleton: {name:'骷髏兵',     lv:13, hp:250,  atk:24, def:7,  exp:72,   gold:[8,18],    spd:60, size:18, h:92,  draw:'skeleton', color:'#eeeae0'},
   spider:   {name:'洞穴蛛后',   lv:16, hp:1600, atk:34, def:10, exp:650,  gold:[80,150],  spd:70, size:30, h:58,  draw:'spider', color:'#4a2e5c', elite:true, respawn:60},
   imp:      {name:'火焰小鬼',   lv:18, hp:380,  atk:34, def:9,  exp:110,  gold:[12,26],   spd:80, size:16, h:52,  draw:'imp', color:'#e8452c'},
   golem:    {name:'熔岩石魔',   lv:22, hp:680,  atk:46, def:15, exp:185,  gold:[18,36],   spd:45, size:24, h:74,  draw:'golem', color:'#6b5a4e'},
@@ -220,10 +242,10 @@ const MAPS = {
   village: {name:'晨曦村', w:32, h:24, theme:'village', safe:true, lvTxt:'安全區',
     portals:[{x:31, y:12, to:'forest', tx:3, ty:20, label:'綠野森林'}],
     npcs:[
-      {id:'elder', name:'村長·老莫', x:13, y:9.6, look:{style:'elder', body:'#8e6e53', hair:'#f4f4f4', acc:'#d9b45a'}},
-      {id:'smith', name:'鐵匠·阿鋼', x:19.5, y:9.6, look:{style:'smith', body:'#6d4c3d', hair:'#d23a2a', acc:'#3a2a20', weapon:'hammer'}},
-      {id:'shop',  name:'雜貨商·小鈴', x:13, y:15, look:{style:'merchant', body:'#f28fb1', hair:'#6a3b2a', acc:'#fff'}},
-      {id:'tele',  name:'傳送師·星語', x:19.5, y:15, look:{style:'tele', body:'#7a4fc9', hair:'#9fe8ff', acc:'#ffd76a'}},
+      {id:'elder', name:'村長·老莫', x:13, y:9.6, look:{gender:'male', style:'robe', outfit:{main:'#4a3e34', trim:'#c9a24a'}, cloak:'#2e2620', hairCol:'#cfcfcf', hairStyle:'mid', beard:true, armor:-1, helmet:-1, boots:-1, weapon:{type:'staff', tier:0, q:0}}},
+      {id:'smith', name:'鐵匠·阿鋼', x:19.5, y:9.6, look:{gender:'male', style:'leather', outfit:{main:'#4a3020', trim:'#8a6a4a'}, cloak:null, hairCol:'#1a1612', hairStyle:'short', beard:true, armor:-1, helmet:0, boots:1, weapon:{type:'hammer'}}},
+      {id:'shop',  name:'雜貨商·小鈴', x:13, y:15, look:{gender:'female', style:'leather', outfit:{main:'#6a2a3a', trim:'#e8c870'}, cloak:null, hairCol:'#4a2416', hairStyle:'pony', armor:-1, helmet:-1, boots:0, weapon:null}},
+      {id:'tele',  name:'傳送師·星語', x:19.5, y:15, look:{gender:'female', style:'robe', outfit:{main:'#1e2250', trim:'#9fe8ff'}, cloak:'#141638', hairCol:'#e0e4ff', hairStyle:'long', armor:-1, helmet:-1, boots:-1, weapon:{type:'staff', tier:3, q:3}}},
     ], monsters:[]},
   forest: {name:'綠野森林', w:52, h:40, theme:'forest', lvTxt:'Lv 1-9',
     portals:[{x:1.2, y:20, to:'village', tx:29.5, ty:12, label:'晨曦村'}, {x:50.8, y:20, to:'cave', tx:3, ty:15, label:'幽暗洞窟'}],
@@ -236,15 +258,15 @@ const MAPS = {
     monsters:[['imp',15,0.1,0.6],['golem',12,0.45,0.8],['boss',1,0.86,0.9]]},
 };
 const THEMES = {
-  village: {bg:'#4f8f42', ground:['#7ec46c','#84ca70','#79bf66','#88cd74'], dark:0},
-  forest:  {bg:'#3a6e33', ground:['#5fa84f','#64ad53','#5aa24b','#69b158'], dark:0.12},
+  village: {bg:'#2e3e28', ground:['#4c6440','#506843','#48603c','#546c46'], dark:0.3},
+  forest:  {bg:'#1e2c1a', ground:['#34482c','#384c2f','#30442a','#3c5032'], dark:0.48},
   cave:    {bg:'#15131b', ground:['#3b3743','#3f3b48','#37333f','#423e4b'], dark:0.58},
   lava:    {bg:'#1a0f0c', ground:['#3a2a25','#3f2d27','#352621','#44302a'], dark:0.36},
 };
 const QUESTS = [
-  {t:'清理史萊姆', d:'村外的果凍史萊姆越來越多了，去「綠野森林」消滅 10 隻吧！', m:'slime', n:10, gold:100, exp:80, item:{slot:'weapon', lv:4, q:1}},
-  {t:'蘑菇危機', d:'蘑菇怪偷走了村民的糧食，去森林擊敗 12 隻蘑菇怪。', m:'mushroom', n:12, gold:200, exp:260, item:{slot:'boots', lv:5, q:1}},
-  {t:'狼群威脅', d:'灰狼在森林深處（東邊）徘徊，討伐 12 隻灰狼。', m:'wolf', n:12, gold:400, exp:700, item:{slot:'armor', lv:9, q:2}},
+  {t:'清剿軟泥', d:'村外的毒液軟泥越來越多了，去「綠野森林」消滅 10 隻吧！', m:'slime', n:10, gold:100, exp:80, item:{slot:'weapon', lv:4, q:1}},
+  {t:'腐菇之災', d:'腐菇妖污染了村民的田地，去森林擊敗 12 隻腐菇妖。', m:'mushroom', n:12, gold:200, exp:260, item:{slot:'boots', lv:5, q:1}},
+  {t:'狼群威脅', d:'暗影狼群在森林深處（東邊）徘徊，討伐 12 隻暗影狼。', m:'wolf', n:12, gold:400, exp:700, item:{slot:'armor', lv:9, q:2}},
   {t:'洞窟探險', d:'幽暗洞窟傳出陣陣骨頭碰撞聲，擊敗 15 隻骷髏兵。', m:'skeleton', n:15, gold:800, exp:2600, item:{slot:'helmet', lv:14, q:2}},
   {t:'蛛后之巢', d:'洞窟最深處的「洞穴蛛后」是一切的元兇，擊敗她！', m:'spider', n:1, gold:1500, exp:4500, item:{slot:'ring', lv:16, q:3}},
   {t:'熔岩試煉', d:'熔岩魔域的火焰小鬼蠢蠢欲動，擊敗 20 隻。', m:'imp', n:20, gold:2000, exp:9000, item:{slot:'weapon', lv:20, q:3}},
@@ -279,9 +301,9 @@ const uid = () => Date.now().toString(36) + (uidc++).toString(36) + Math.floor(M
 
 function expNeed(lv){ return Math.floor(20 * Math.pow(lv, 1.8) + 30); }
 
-function newPlayer(name, cls){
+function newPlayer(name, cls, gender){
   const p = {name, cls, lv:1, exp:0, gold:60, hpPot:5, mpPot:5, inv:[], eq:{weapon:null, helmet:null, armor:null, boots:null, ring:null},
-    quest:{i:0, c:0, acc:false}, map:'village', x:16 * TILE, y:13 * TILE, hp:0, mp:null, auto:false, kills:0};
+    gender:gender || 'male', quest:{i:0, c:0, acc:false}, map:'village', x:16 * TILE, y:13 * TILE, hp:0, mp:null, auto:false, kills:0};
   p.eq.weapon = genItem('weapon', 1, 0, cls);
   return p;
 }
@@ -321,6 +343,7 @@ function genItem(slot, mlv, q, cls){
     else if(r < 0.8) it.crit += 1 + q;
     else it.atk += Math.round(pw * 0.25);
   }
+  it.tier = tier;
   it.price = Math.round(pw * (q + 1) * 1.5);
   return it;
 }
@@ -415,34 +438,40 @@ function buildMap(id){
     // 小草與花
     for(let i = 0; i < M.w * M.h * 1.2; i++){
       const x = R() * cw, y = R() * ch;
-      c.strokeStyle = 'rgba(40,110,40,.55)'; c.lineWidth = 1.5;
+      c.strokeStyle = 'rgba(14,30,10,.45)'; c.lineWidth = 1.4;
       c.beginPath(); c.moveTo(x, y); c.lineTo(x - 2, y - 6); c.moveTo(x, y); c.lineTo(x + 2, y - 7); c.stroke();
     }
-    for(let i = 0; i < M.w * M.h * 0.12; i++){
-      const x = R() * cw, y = R() * ch, col = ['#fff','#ffe066','#ff8fb1','#a7c7ff'][Math.floor(R() * 4)];
+    for(let i = 0; i < M.w * M.h * 0.04; i++){
+      const x = R() * cw, y = R() * ch, col = ['#c8c0b0','#c8a850','#9a5a6a','#7a8ab0'][Math.floor(R() * 4)];
       c.fillStyle = col; for(let k = 0; k < 5; k++){ c.beginPath(); c.arc(x + Math.cos(k * 1.256) * 3, y + Math.sin(k * 1.256) * 3, 2.2, 0, PI2); c.fill(); }
-      c.fillStyle = '#f5b000'; c.beginPath(); c.arc(x, y, 1.6, 0, PI2); c.fill();
+      c.fillStyle = '#6a5a20'; c.beginPath(); c.arc(x, y, 1.6, 0, PI2); c.fill();
     }
   }
   if(M.theme === 'village'){
-    path([[0, 12 * TILE], [cw, 12 * TILE]], 64, '#d9c08a', '#c4a870');
-    path([[16 * TILE, 3 * TILE], [16 * TILE, 21 * TILE]], 50, '#d9c08a', '#c4a870');
-    c.fillStyle = '#c4a870'; ell(c, 16 * TILE, 12.3 * TILE, 5.2 * TILE, 4.2 * TILE); c.fill();
-    c.fillStyle = '#dcc690'; ell(c, 16 * TILE, 12.3 * TILE, 5 * TILE, 4 * TILE); c.fill();
-    // 石板
-    for(let i = 0; i < 70; i++){
-      const a = R() * PI2, rd = Math.sqrt(R()) * 4.5 * TILE;
-      c.fillStyle = 'rgba(160,130,90,.35)'; rr(c, 16 * TILE + Math.cos(a) * rd, 12.3 * TILE + Math.sin(a) * rd * 0.8, 14, 9, 3); c.fill();
+    // 石板路與廣場
+    const onRoad = (x, y) => Math.abs(y - 12 * TILE) < 34 || (Math.abs(x - 16 * TILE) < 26 && y > 3 * TILE && y < 21 * TILE) || ((x - 16 * TILE) ** 2 / (5 * TILE) ** 2 + (y - 12.3 * TILE) ** 2 / (4 * TILE) ** 2 < 1);
+    path([[0, 12 * TILE], [cw, 12 * TILE]], 68, '#3e3830', '#2a2620');
+    path([[16 * TILE, 3 * TILE], [16 * TILE, 21 * TILE]], 52, '#3e3830', '#2a2620');
+    c.fillStyle = '#2a2620'; ell(c, 16 * TILE, 12.3 * TILE, 5.2 * TILE, 4.2 * TILE); c.fill();
+    c.fillStyle = '#3e3830'; ell(c, 16 * TILE, 12.3 * TILE, 5 * TILE, 4 * TILE); c.fill();
+    const STONE = ['#77706a', '#6c665e', '#827a70', '#625c55'];
+    for(let y = 0; y < ch; y += 9) for(let x = ((y / 9) % 2) * 6; x < cw; x += 12){
+      const sx = x + (R() - 0.5) * 3, sy = y + (R() - 0.5) * 2;
+      if(!onRoad(sx, sy)) continue;
+      c.fillStyle = STONE[Math.floor(R() * 4)]; rr(c, sx - 5, sy - 3.5, 9.5 + R() * 2, 7, 2.2); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.06)'; c.fillRect(sx - 4, sy - 3, 7, 1.4);
     }
+    c.strokeStyle = 'rgba(200,170,90,.25)'; c.lineWidth = 3; ell(c, 16 * TILE, 12.3 * TILE, 3.2 * TILE, 2.5 * TILE); c.stroke();
     avoid.push({x:16 * TILE, y:12.3 * TILE, r:5.6 * TILE});
-    const houses = [[5, 7, '#c0392b'], [26.5, 7, '#2e6fc0'], [5, 19.5, '#8e44ad'], [26.5, 19.5, '#d35400'], [10.5, 4.5, '#16a085'], [21.5, 4.5, '#b7950b']];
+    const houses = [[5, 7, '#5a2a24'], [26.5, 7, '#2a3448'], [5, 19.5, '#3a3240'], [26.5, 19.5, '#4a3424'], [11, 4.2, '#2e3a30'], [21, 4.2, '#4a2e2a']];
     for(const [hx, hy, roof] of houses){
       dec.push({t:'house', x:hx * TILE, y:hy * TILE, roof});
-      sol.push({x1:hx * TILE - 62, y1:hy * TILE - 50, x2:hx * TILE + 62, y2:hy * TILE + 4});
-      avoid.push({x:hx * TILE, y:hy * TILE - 20, r:TILE * 2.2});
+      sol.push({x1:hx * TILE - 78, y1:hy * TILE - 56, x2:hx * TILE + 78, y2:hy * TILE + 4});
+      avoid.push({x:hx * TILE, y:hy * TILE - 30, r:TILE * 2.8});
     }
     dec.push({t:'well', x:16 * TILE, y:11.4 * TILE});
-    sol.push({x1:16 * TILE - 22, y1:11.4 * TILE - 16, x2:16 * TILE + 22, y2:11.4 * TILE + 4});
+    for(const [lx, ly] of [[10.6, 9.2], [21.4, 9.2], [10.6, 15.6], [21.4, 15.6], [3, 11], [29, 11], [15, 4], [15, 20.5]]) dec.push({t:'lamp', x:lx * TILE, y:ly * TILE, v:R()});
+    sol.push({x1:16 * TILE - 26, y1:11.4 * TILE - 18, x2:16 * TILE + 26, y2:11.4 * TILE + 4});
     for(let x = 0; x < M.w; x++) for(const y of [0.6, M.h - 0.3]){
       if(Math.abs(x - 16) < 2) continue;
       if(R() < 0.75) dec.push({t:'tree', x:(x + 0.5) * TILE + (R() - 0.5) * 16, y:y * TILE, s:0.9 + R() * 0.35, v:R()});
@@ -465,7 +494,7 @@ function buildMap(id){
   if(M.theme === 'forest'){
     const trail = [];
     for(let x = 0; x <= M.w; x += 1) trail.push([x * TILE, (20 + Math.sin(x * 0.22) * 4 + Math.sin(x * 0.07) * 3) * TILE]);
-    path(trail, 56, '#b8a06a', '#9f8a58');
+    path(trail, 56, '#4a3e2c', '#2e2618');
     const onTrail = (x, y) => { const tx = x / TILE; const ty = 20 + Math.sin(tx * 0.22) * 4 + Math.sin(tx * 0.07) * 3; return Math.abs(y / TILE - ty) < 1.6; };
     for(let i = 0; i < 260; i++){
       const edge = R() < 0.45;
@@ -604,7 +633,7 @@ function hitPlayer(raw, src){
   if(P.dead) return;
   const dmg = calcDmg(raw, S.def);
   P.hp -= dmg; P.hitFlash = 0.15;
-  ftext(P.x + rand(-6, 6), P.y - 66, '-' + dmg, '#ff5a5a', 16);
+  ftext(P.x + rand(-6, 6), P.y - 96, '-' + dmg, '#ff5a5a', 16);
   if(P.hp <= 0){ P.hp = 0; die(src); }
 }
 function killMonster(m){
@@ -673,9 +702,9 @@ function basicAttack(m){
   P.atkCd = C.cd; P.atkAnim = 1; P.face = m.x >= P.x ? 1 : -1;
   if(!C.proj){
     hitMonster(m, S.atk);
-    fxs.push({k:'slash', x:P.x + P.face * 22, y:P.y - 26, f:P.face, t:0, life:0.2, color:'#fff'});
+    fxs.push({k:'slash', x:P.x + P.face * 22, y:P.y - 44, f:P.face, t:0, life:0.2, color:'#fff'});
   } else {
-    projs.push({x:P.x + P.face * 14, y:P.y - 28, tgt:m, speed:C.proj === 'arrow' ? 560 : 400, dmg:S.atk, kind:C.proj, color:C.proj === 'arrow' ? '#ffe9a8' : '#a9c8ff', homing:true, life:2, hit:new Set(), vx:0, vy:0, aoe:0});
+    projs.push({x:P.x + P.face * 14, y:P.y - 50, tgt:m, speed:C.proj === 'arrow' ? 560 : 400, dmg:S.atk, kind:C.proj, color:C.proj === 'arrow' ? '#ffe9a8' : '#a9c8ff', homing:true, life:2, hit:new Set(), vx:0, vy:0, aoe:0});
   }
 }
 function useSkill(i, silent){
@@ -692,7 +721,7 @@ function useSkill(i, silent){
     P.target = tgt; P.face = tgt.x >= P.x ? 1 : -1;
   }
   P.mp -= sk.mp; P.scd[i] = sk.cd; P.atkAnim = 1;
-  ftext(P.x, P.y - 78, sk.name, sk.fx, 14, 0.8);
+  ftext(P.x, P.y - 108, sk.name, sk.fx, 14, 0.8);
   const base = S.atk * sk.mult;
   switch(sk.type){
     case 'aoeSelf':
@@ -711,18 +740,18 @@ function useSkill(i, silent){
     case 'buff':
       P.buffT = sk.dur; P.hp = Math.min(S.maxHp, P.hp + S.maxHp * sk.heal);
       ring(P.x, P.y, 70, sk.fx, 0.6, 6); burst(P.x, P.y - 30, sk.fx, 24, 140, 80);
-      ftext(P.x, P.y - 92, '攻擊力 +50%', '#ff9a6a', 13, 1.2);
+      ftext(P.x, P.y - 122, '攻擊力 +50%', '#ff9a6a', 13, 1.2);
       break;
     case 'proj':
-      projs.push({x:P.x + P.face * 14, y:P.y - 28, tgt, speed:sk.speed, dmg:base, kind:sk.pierce ? 'pierce' : 'fireball', color:sk.fx,
+      projs.push({x:P.x + P.face * 14, y:P.y - 50, tgt, speed:sk.speed, dmg:base, kind:sk.pierce ? 'pierce' : 'fireball', color:sk.fx,
         homing:!sk.pierce, pierce:!!sk.pierce, aoe:sk.aoe || 0, life:sk.pierce ? 0.9 : 2, hit:new Set(),
-        vx:0, vy:0, ang:Math.atan2(tgt.y - 14 - (P.y - 28), tgt.x - P.x)});
+        vx:0, vy:0, ang:Math.atan2(tgt.y - 14 - (P.y - 50), tgt.x - P.x)});
       break;
     case 'fan': {
-      const a0 = Math.atan2(tgt.y - 14 - (P.y - 28), tgt.x - P.x);
+      const a0 = Math.atan2(tgt.y - 14 - (P.y - 50), tgt.x - P.x);
       for(let k = 0; k < sk.n; k++){
         const a = a0 + (k - (sk.n - 1) / 2) * 0.17;
-        projs.push({x:P.x + P.face * 14, y:P.y - 28, tgt:null, speed:sk.speed, dmg:base, kind:'arrow', color:sk.fx, homing:false, pierce:false, aoe:0, life:0.7, hit:new Set(), ang:a, vx:Math.cos(a) * sk.speed, vy:Math.sin(a) * sk.speed});
+        projs.push({x:P.x + P.face * 14, y:P.y - 50, tgt:null, speed:sk.speed, dmg:base, kind:'arrow', color:sk.fx, homing:false, pierce:false, aoe:0, life:0.7, hit:new Set(), ang:a, vx:Math.cos(a) * sk.speed, vy:Math.sin(a) * sk.speed});
       }
       break;
     }
@@ -748,11 +777,11 @@ function usePot(k, silent){
   if(k === 'hp'){
     if(P.hpPot <= 0){ if(!silent) msg('沒有紅藥水了！去雜貨商購買吧', '#ff8a8a'); return; }
     if(P.hp >= S.maxHp) return;
-    P.hpPot--; const v = Math.round(S.maxHp * 0.35 + 40); P.hp = Math.min(S.maxHp, P.hp + v); ftext(P.x, P.y - 70, '+' + v, '#6fff6f', 15);
+    P.hpPot--; const v = Math.round(S.maxHp * 0.35 + 40); P.hp = Math.min(S.maxHp, P.hp + v); ftext(P.x, P.y - 100, '+' + v, '#6fff6f', 15);
   } else {
     if(P.mpPot <= 0){ if(!silent) msg('沒有藍藥水了！去雜貨商購買吧', '#ff8a8a'); return; }
     if(P.mp >= S.maxMp) return;
-    P.mpPot--; const v = Math.round(S.maxMp * 0.4 + 25); P.mp = Math.min(S.maxMp, P.mp + v); ftext(P.x, P.y - 70, '+' + v, '#7ab8ff', 15);
+    P.mpPot--; const v = Math.round(S.maxMp * 0.4 + 25); P.mp = Math.min(S.maxMp, P.mp + v); ftext(P.x, P.y - 100, '+' + v, '#7ab8ff', 15);
   }
   P.potCd = 0.8; burst(P.x, P.y - 30, k === 'hp' ? '#ff7a7a' : '#7ab8ff', 10, 70, 60);
 }
@@ -997,134 +1026,274 @@ function snapCam(){ const t = camTarget(); cam.x = t.x; cam.y = t.y; }
 function updateCam(dt){ const t = camTarget(); const k = 1 - Math.exp(-dt * 8); cam.x += (t.x - cam.x) * k; cam.y += (t.y - cam.y) * k; }
 
 /* ================= 繪製：Q 版人物 ================= */
-function drawChibi(c, x, y, o){
-  const s = o.scale || 1, face = o.face < 0 ? -1 : 1;
-  c.save(); c.translate(x, y);
-  if(!o.noShadow){ c.fillStyle = 'rgba(0,0,0,.28)'; ell(c, 0, 0, 15 * s, 5.5 * s); c.fill(); }
-  c.scale(s * face, s);
-  const t = o.walk || 0, mv = !!o.moving, atk = o.atk || 0, style = o.style || 'sword';
-  const bob = mv ? -Math.abs(Math.sin(t)) * 2.6 : Math.sin((o.time || 0) * 2.4) * 0.8;
-  const sw = mv ? Math.sin(t) * 3.2 : 0;
-  c.translate(0, bob);
-  const skin = o.skin || '#ffe0c4', body = o.body, hair = o.hair;
-  // 背後物件
-  if(style === 'ranger'){ c.fillStyle = '#7a4b25'; rr(c, -15, -32, 6, 17, 2); c.fill(); c.fillStyle = '#eee'; for(let i = 0; i < 3; i++) c.fillRect(-14 + i * 1.7, -37, 1.3, 6); c.fillStyle = '#e44'; for(let i = 0; i < 3; i++) c.fillRect(-14.3 + i * 1.7, -38, 1.9, 2.5); }
-  if(style === 'mage' || style === 'tele'){ c.fillStyle = shade(body, -40); c.beginPath(); c.moveTo(-7, -27); c.quadraticCurveTo(-18, -12, -15, -3 + sw * 0.3); c.lineTo(4, -5); c.lineTo(5, -27); c.closePath(); c.fill(); }
-  if(o.weapon === 'staff' || o.weapon === 'bow'){ /* drawn in front */ }
-  // 腿
-  c.fillStyle = o.pants || '#4b3a30';
-  rr(c, -7 + sw, -12, 6, 11, 3); c.fill(); rr(c, 1 - sw, -12, 6, 11, 3); c.fill();
-  c.fillStyle = o.shoe || '#2e221b'; rr(c, -8 + sw, -4.5, 8.5, 4.5, 2); c.fill(); rr(c, 0 - sw, -4.5, 8.5, 4.5, 2); c.fill();
-  // 後手
-  c.fillStyle = shade(body, -30); ell(c, -10, -19 + sw * 0.3, 3.6, 5.2); c.fill();
-  // 身體
-  c.fillStyle = body;
-  if(style === 'mage' || style === 'tele' || style === 'elder'){
-    c.beginPath(); c.moveTo(-9, -28); c.lineTo(9, -28); c.lineTo(12, -6); c.quadraticCurveTo(0, -2.5, -12, -6); c.closePath(); c.fill();
-    c.fillStyle = o.acc || '#ffd76a'; c.fillRect(-1.2, -27, 2.4, 22);
-  } else if(style === 'skeleton'){
-    c.fillStyle = '#e9e5d8'; rr(c, -7, -27, 14, 17, 5); c.fill();
-    c.strokeStyle = '#6a6458'; c.lineWidth = 1.4; for(let k = 0; k < 3; k++){ c.beginPath(); c.moveTo(-6, -24 + k * 4.5); c.lineTo(6, -24 + k * 4.5); c.stroke(); }
-  } else {
-    rr(c, -10, -28, 20, 19, 7); c.fill();
-    c.fillStyle = shade(body, 30); rr(c, -6, -26, 7, 5, 2); c.fill();
-    if(style === 'merchant'){ c.fillStyle = '#fff'; rr(c, -7, -21, 14, 13, 3); c.fill(); }
+/* ================= 外觀系統（依裝備改變外觀） =================
+   每個部位依「裝備階級 tier（0~6）」決定外觀。要新增或調整造型，改下面這幾張表即可。
+   tier 對應名稱：0 木/布、1 鐵/皮、2 精鋼/鎖子、3 寒霜/精鋼、4 烈焰/炎紋、5 龍、6 天命 */
+const ARMOR_LOOK = [
+  {main:'#6e6150', trim:'#8a7a62', pad:0},
+  {main:'#5e4630', trim:'#a07040', pad:1},
+  {main:'#7d838c', trim:'#4a4f57', pad:1, cloak:'#3a3f4a'},
+  {main:'#a9b3bf', trim:'#c9a24a', pad:2, cloak:'#22305a'},
+  {main:'#5a1e18', trim:'#ff7a1a', pad:2, cloak:'#6a1410', glow:'#ff5a1a'},
+  {main:'#1e4a46', trim:'#7fe0c8', pad:3, cloak:'#0e2a28', glow:'#5ff0d0'},
+  {main:'#e8e2d0', trim:'#ffd76a', pad:3, cloak:'#b8902a', glow:'#fff2a8'},
+];
+const HELM_LOOK = [
+  {t:'band', c:'#6e6150'}, {t:'cap', c:'#5e4630', p:'#a07040'}, {t:'iron', c:'#8a9098', p:'#5a5f68'},
+  {t:'plume', c:'#b8c2ce', p:'#b02a22'}, {t:'horn', c:'#3a1612', p:'#ff7a1a'}, {t:'dragon', c:'#1e4a46', p:'#7fe0c8'}, {t:'crown', c:'#ffd76a', p:'#ff4a6a'},
+];
+const BOOT_LOOK = ['#4a3a2a', '#5a3a20', '#6a6f78', '#9aa4b0', '#5a1e18', '#1e4a46', '#e8d8a0'];
+const WEAPON_LOOK = {
+  blade:['#9a9184', '#b8c0c8', '#d8e0e8', '#bfe6ff', '#ffb080', '#a0f5e2', '#fff4c0'],
+  guard:['#6b4a2a', '#7a7a80', '#c9a24a', '#8ad0ff', '#ff5a1a', '#2aa090', '#ffd76a'],
+  edge: [null, null, null, '#8ad0ff', '#ff6a1a', '#5ff0d0', '#ffe066'],
+  wood: ['#7b5a3a', '#5e3c22', '#4a3020', '#3a3a4a', '#4a1410', '#14403a', '#e8d8a0'],
+  gem:  ['#9fb0c0', '#c0d0ff', '#9fe8ff', '#c58aff', '#ff6a2a', '#5ff0d0', '#fff2a8'],
+};
+const CLASS_LOOK = {
+  sword:  {style:'plate',   outfit:{main:'#34343e', trim:'#7a7a86'}, cloak:'#6a1a1a', hair:{male:['#2a2018','short'], female:['#18161c','pony']}},
+  mage:   {style:'robe',    outfit:{main:'#2a2448', trim:'#8a7ad0'}, cloak:'#1e1a3a', hair:{male:['#cfd4e0','mid'],   female:['#e4dcff','long']}},
+  ranger: {style:'leather', outfit:{main:'#33402a', trim:'#7a8a50'}, cloak:'#26331e', hair:{male:['#5a3018','short'], female:['#8a3e1e','pony']}},
+};
+function itemTier(it){
+  if(!it) return -1;
+  if(it.tier != null) return it.tier;
+  const arr = it.slot === 'weapon' ? (WNAMES[it.cls] || WNAMES.sword) : NAMES[it.slot];
+  let i = arr ? arr.indexOf(it.name) : -1;
+  if(i < 0) i = clamp(Math.floor(((it.lv || 1) + 2) / 5), 0, 6);
+  it.tier = i; return i;
+}
+function heroLook(p){
+  const g = p.gender === 'female' ? 'female' : 'male', CL = CLASS_LOOK[p.cls], eq = p.eq || {};
+  const w = eq.weapon;
+  return {gender:g, style:CL.style, outfit:CL.outfit, cloak:CL.cloak, hairCol:CL.hair[g][0], hairStyle:CL.hair[g][1],
+    armor:itemTier(eq.armor), helmet:itemTier(eq.helmet), boots:itemTier(eq.boots),
+    weapon:w ? {type:CLASSES[p.cls].weapon, tier:itemTier(w), q:w.q} : null,
+    aura:eq.ring && eq.ring.q >= 3 ? QC[eq.ring.q] : null};
+}
+const SKEL_LOOK = {gender:'male', style:'bone', outfit:{main:'#ddd6c0', trim:'#8a8478'}, armor:-1, helmet:1, boots:-1, weapon:{type:'rusty', tier:1, q:0}};
+
+function limb(c, x1, y1, x2, y2, w, col){ c.strokeStyle = col; c.lineWidth = w; c.lineCap = 'round'; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
+function drawLeg(c, hx, hy, ph, lift, col, bootC, bone){
+  const fx = hx + ph * 8, fy = -lift;
+  const kx = (hx + fx) / 2 + 2.5, ky = -19 - lift * 0.6;
+  limb(c, hx, hy, kx, ky, bone ? 2.6 : 6.4, col);
+  limb(c, kx, ky, fx, fy - 3, bone ? 2.2 : 5.2, col);
+  if(bone){ c.fillStyle = col; ell(c, fx + 2, fy - 1.5, 3, 1.6); c.fill(); return; }
+  limb(c, kx + (fx - kx) * 0.35, ky + (fy - 3 - ky) * 0.35, fx, fy - 3, 6.2, bootC);
+  c.fillStyle = bootC; ell(c, fx + 2.6, fy - 2, 4.6, 2.4); c.fill();
+}
+function drawArm(c, sx, sy, a, b, col, handCol, bone, bracer){
+  const ex = sx + Math.sin(a) * 11, ey = sy + Math.cos(a) * 11;
+  const hx = ex + Math.sin(a + b) * 10, hy = ey + Math.cos(a + b) * 10;
+  limb(c, sx, sy, ex, ey, bone ? 2.4 : 5.2, col);
+  limb(c, ex, ey, hx, hy, bone ? 2.1 : 4.4, bracer || col);
+  return {hx, hy, handCol, ang:a + b};
+}
+function drawHand(c, h){ c.fillStyle = h.handCol; c.beginPath(); c.arc(h.hx, h.hy, 2.5, 0, PI2); c.fill(); }
+function drawPad(c, x, y, pad, main, trim, glow){
+  const rx = 3 + pad * 1.1, ry = 2.4 + pad * 0.8;
+  c.fillStyle = shade(main, 12); ell(c, x, y, rx, ry); c.fill();
+  c.strokeStyle = trim; c.lineWidth = 1.1; if(glow){ c.shadowColor = glow; c.shadowBlur = 6; } c.stroke(); c.shadowBlur = 0;
+  if(pad >= 3){ c.fillStyle = trim; for(const dx of [-2.5, 2]){ c.beginPath(); c.moveTo(x + dx - 1.4, y - ry + 1); c.lineTo(x + dx - 0.8, y - ry - 5); c.lineTo(x + dx + 1.4, y - ry + 1); c.closePath(); c.fill(); } }
+}
+function drawHairBack(c, L, time, sway){
+  const col = shade(L.hairCol, -18); c.fillStyle = col;
+  if(L.hairStyle === 'long'){ c.beginPath(); c.moveTo(-4, -82); c.quadraticCurveTo(-11, -78, -10.5, -66); c.quadraticCurveTo(-11 + sway, -56, -9 + sway, -48); c.lineTo(-3, -51); c.quadraticCurveTo(-3, -62, -1, -70); c.closePath(); c.fill(); }
+  else if(L.hairStyle === 'mid'){ c.beginPath(); c.moveTo(-4, -82); c.quadraticCurveTo(-11, -77, -10, -66); c.lineTo(-7 + sway * 0.4, -61); c.lineTo(-2, -66); c.closePath(); c.fill(); }
+  else if(L.hairStyle === 'pony'){ c.beginPath(); c.moveTo(-6, -81); c.quadraticCurveTo(-16 + sway * 0.5, -80, -15 + sway, -62); c.lineTo(-12.5 + sway, -60); c.quadraticCurveTo(-12, -74, -5, -77); c.closePath(); c.fill(); }
+}
+function drawHairTop(c, L){
+  c.fillStyle = L.hairCol;
+  c.beginPath(); c.moveTo(-6.6, -69); c.quadraticCurveTo(-9.4, -80, -3, -83.4); c.quadraticCurveTo(4.4, -86, 8.6, -78.6);
+  c.lineTo(6.4, -79.4); c.lineTo(5.8, -76.8); c.lineTo(3.6, -79.2); c.lineTo(1.6, -77.2); c.quadraticCurveTo(-1, -78, -1.6, -74); c.quadraticCurveTo(-3.2, -72, -3.8, -68.6); c.closePath(); c.fill();
+  if(L.hairStyle === 'short'){ c.beginPath(); c.moveTo(-2, -83.6); c.lineTo(-10.5, -84.5); c.lineTo(-6.6, -80.5); c.lineTo(-11.5, -78.6); c.lineTo(-6.8, -76.5); c.lineTo(-9.5, -72); c.lineTo(-5, -73); c.closePath(); c.fill(); }
+  if(L.hairStyle === 'long' || L.hairStyle === 'mid'){ c.beginPath(); c.moveTo(-1.6, -74); c.quadraticCurveTo(-3.5, -68, -2.2, L.hairStyle === 'long' ? -60 : -65); c.lineTo(-0.6, -66); c.quadraticCurveTo(-0.6, -71, 0.4, -75); c.closePath(); c.fill(); }
+  if(L.hairStyle === 'pony'){ c.fillStyle = '#7a1a1a'; ell(c, -6.2, -79.6, 1.6, 2.2); c.fill(); }
+  c.fillStyle = 'rgba(255,255,255,.14)'; c.beginPath(); c.moveTo(-3, -82.6); c.quadraticCurveTo(3, -85, 6.5, -80.5); c.quadraticCurveTo(2, -82.4, -3, -81); c.closePath(); c.fill();
+}
+function drawHelm(c, tier, time){
+  const H = HELM_LOOK[tier]; if(!H) return;
+  if(H.t === 'band'){ c.strokeStyle = H.c; c.lineWidth = 2.4; c.beginPath(); c.moveTo(-6.8, -78.4); c.quadraticCurveTo(1.5, -82, 8.4, -78.2); c.stroke(); return; }
+  if(H.t === 'crown'){
+    c.fillStyle = H.c; c.shadowColor = '#fff2a8'; c.shadowBlur = 8;
+    c.beginPath(); c.moveTo(-6.6, -79); c.lineTo(-6.4, -85); c.lineTo(-3.4, -81.6); c.lineTo(0.6, -88); c.lineTo(3.6, -81.6); c.lineTo(7, -85.6); c.lineTo(8.2, -78.8); c.quadraticCurveTo(1, -81, -6.6, -79); c.closePath(); c.fill(); c.shadowBlur = 0;
+    c.fillStyle = H.p; ell(c, 0.8, -81.6, 1.3, 1.6); c.fill(); return;
   }
-  if(style !== 'skeleton'){ c.fillStyle = o.acc || '#f0c040'; c.fillRect(-10, -15, 20, 3); }
-  // 頭
-  const hy = -42;
-  c.fillStyle = skin; c.beginPath(); c.arc(0, hy, 15, 0, PI2); c.fill();
-  // 頭髮
-  c.fillStyle = hair;
-  if(style === 'sword'){
-    c.beginPath(); c.arc(0, hy - 1, 16, Math.PI * 0.98, Math.PI * 2.02); c.fill();
-    c.beginPath(); c.moveTo(-16, hy - 1); c.lineTo(-12, hy + 4); c.lineTo(-8, hy - 1); c.lineTo(-3, hy + 5); c.lineTo(2, hy - 1); c.lineTo(7, hy + 4); c.lineTo(11, hy - 2); c.lineTo(16, hy - 1); c.closePath(); c.fill();
-    c.beginPath(); c.moveTo(-14, hy - 8); c.lineTo(-20, hy - 16); c.lineTo(-8, hy - 13); c.lineTo(-6, hy - 24); c.lineTo(1, hy - 15); c.lineTo(7, hy - 23); c.lineTo(9, hy - 13); c.lineTo(17, hy - 14); c.lineTo(14, hy - 5); c.closePath(); c.fill();
-    c.fillStyle = '#d33'; c.fillRect(-15, hy - 6, 30, 3.2); c.beginPath(); c.moveTo(-15, hy - 5); c.lineTo(-23, hy - 9 + Math.sin((o.time || 0) * 6) * 2); c.lineTo(-22, hy - 2); c.closePath(); c.fill();
-  } else if(style === 'mage'){
-    c.beginPath(); c.arc(0, hy - 1, 16, Math.PI, PI2); c.fill();
-    rr(c, -17, hy - 4, 8, 22, 4); c.fill();
-    c.beginPath(); c.moveTo(-15, hy - 2); c.quadraticCurveTo(0, hy + 7, 15, hy - 2); c.lineTo(15, hy - 6); c.lineTo(-15, hy - 6); c.closePath(); c.fill();
-    c.fillStyle = '#4a3a9e'; ell(c, 0, hy - 11, 22, 5.5); c.fill();
-    c.beginPath(); c.moveTo(-12, hy - 12); c.quadraticCurveTo(-2, hy - 30, -14, hy - 44); c.quadraticCurveTo(4, hy - 34, 12, hy - 12); c.closePath(); c.fill();
-    c.fillStyle = '#ffd76a'; drawStar(c, 1, hy - 20, 4, 2);
-  } else if(style === 'ranger'){
-    c.beginPath(); c.arc(0, hy - 1, 16, Math.PI, PI2); c.fill();
-    c.beginPath(); c.moveTo(-15, hy - 2); c.quadraticCurveTo(-5, hy + 6, 4, hy - 2); c.quadraticCurveTo(10, hy + 3, 15, hy - 3); c.lineTo(15, hy - 6); c.lineTo(-15, hy - 6); c.closePath(); c.fill();
-    const pt = Math.sin((o.time || 0) * 4 + t) * 2;
-    c.beginPath(); c.moveTo(-14, hy - 6); c.quadraticCurveTo(-28, hy - 2 + pt, -22, hy + 14 + pt); c.quadraticCurveTo(-18, hy + 2, -12, hy - 1); c.closePath(); c.fill();
-    c.fillStyle = '#2f7a43'; c.fillRect(-15.5, hy - 8, 31, 3.5);
-    c.fillStyle = '#ffe066'; ell(c, 12, hy - 7, 2.5, 2.5); c.fill();
-  } else if(style === 'elder'){
-    c.fillStyle = skin; c.beginPath(); c.arc(0, hy - 2, 15.5, Math.PI, PI2); c.fill();
-    c.fillStyle = hair; ell(c, -13, hy - 2, 5, 8); c.fill(); ell(c, 13, hy - 2, 4, 7); c.fill();
-    c.beginPath(); c.moveTo(-10, hy + 6); c.quadraticCurveTo(3, hy + 30, 14, hy + 6); c.quadraticCurveTo(3, hy + 11, -10, hy + 6); c.fill();
-    c.fillRect(-4, hy - 3, 6, 2); c.fillRect(5, hy - 3, 6, 2);
-  } else if(style === 'smith'){
-    c.beginPath(); c.arc(0, hy - 2, 16, Math.PI, PI2); c.fill(); c.fillRect(-16, hy - 3, 32, 4);
-    c.beginPath(); c.moveTo(-15, hy - 3); c.lineTo(-24, hy - 8); c.lineTo(-22, hy + 2); c.closePath(); c.fill();
-    c.fillStyle = 'rgba(80,50,30,.35)'; ell(c, 4, hy + 9, 9, 5); c.fill();
-  } else if(style === 'merchant'){
-    c.beginPath(); c.arc(0, hy - 1, 16, Math.PI, PI2); c.fill(); ell(c, -2, hy - 17, 7, 6); c.fill();
-    c.beginPath(); c.moveTo(-15, hy - 2); c.quadraticCurveTo(0, hy + 6, 15, hy - 2); c.lineTo(15, hy - 6); c.lineTo(-15, hy - 6); c.closePath(); c.fill();
-    rr(c, -17, hy - 4, 6, 16, 3); c.fill();
-    c.fillStyle = '#ff5a8a'; ell(c, -5, hy - 18, 4, 2.5); c.fill(); ell(c, 2, hy - 18, 4, 2.5); c.fill();
-  } else if(style === 'tele'){
-    c.fillStyle = body; c.beginPath(); c.arc(0, hy - 1, 18, Math.PI * 0.85, Math.PI * 2.15); c.lineTo(17, hy + 9); c.quadraticCurveTo(14, hy - 10, 0, hy - 12); c.quadraticCurveTo(-14, hy - 10, -17, hy + 9); c.closePath(); c.fill();
-    c.fillStyle = hair; c.beginPath(); c.moveTo(-12, hy - 6); c.quadraticCurveTo(0, hy + 2, 13, hy - 6); c.lineTo(10, hy - 10); c.lineTo(-10, hy - 10); c.closePath(); c.fill();
-    c.fillStyle = '#ffd76a'; drawStar(c, 0, hy - 14, 3.5, 1.6);
-  } else if(style === 'skeleton'){
-    c.fillStyle = '#8a6a3a'; c.beginPath(); c.arc(0, hy - 2, 16.5, Math.PI, PI2); c.fill(); c.fillRect(-17, hy - 3, 34, 3);
+  if(H.t === 'cap'){
+    c.fillStyle = H.c; c.beginPath(); c.ellipse(0.8, -76.6, 8.6, 8, 0, Math.PI * 1.02, Math.PI * 1.98); c.closePath(); c.fill();
+    c.strokeStyle = H.p; c.lineWidth = 1.6; c.beginPath(); c.moveTo(-7.8, -76.8); c.lineTo(9.4, -76.8); c.stroke(); return;
   }
-  // 臉
-  if(style === 'skeleton'){
-    c.fillStyle = '#2a2018'; ell(c, -3, hy + 2, 3.5, 4.2); c.fill(); ell(c, 7, hy + 2, 3.5, 4.2); c.fill();
-    c.fillStyle = '#ff3a3a'; ell(c, -3, hy + 2.5, 1.2, 1.2); c.fill(); ell(c, 7, hy + 2.5, 1.2, 1.2); c.fill();
-    c.strokeStyle = '#2a2018'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-2, hy + 10); c.lineTo(9, hy + 10); for(let k = 0; k < 4; k++){ c.moveTo(-1 + k * 3, hy + 8.5); c.lineTo(-1 + k * 3, hy + 11.5); } c.stroke();
-  } else {
-    const blink = ((o.time || 0) % 3.6) < 0.12;
-    c.fillStyle = '#2b1d14';
-    if(blink){ c.fillRect(-5, hy + 3, 5, 1.6); c.fillRect(4.5, hy + 3, 5, 1.6); }
-    else {
-      ell(c, -2.5, hy + 3, 2.6, 3.6); c.fill(); ell(c, 7, hy + 3, 2.6, 3.6); c.fill();
-      c.fillStyle = '#fff'; ell(c, -1.6, hy + 1.6, 1, 1.2); c.fill(); ell(c, 7.9, hy + 1.6, 1, 1.2); c.fill();
-    }
-    c.fillStyle = 'rgba(255,120,140,.45)'; ell(c, -7, hy + 8.5, 3.2, 2); c.fill(); ell(c, 12, hy + 8, 2.6, 1.8); c.fill();
-    c.strokeStyle = '#a0522d'; c.lineWidth = 1.3; c.beginPath();
-    if(o.hurt) { c.moveTo(1, hy + 10); c.lineTo(5, hy + 10); } else c.arc(3, hy + 8, 2.2, 0.2, Math.PI - 0.2);
-    c.stroke();
+  // 全罩式頭盔
+  const g = c.createLinearGradient(-8, 0, 9, 0); g.addColorStop(0, shade(H.c, -40)); g.addColorStop(0.6, H.c); g.addColorStop(1, shade(H.c, 30));
+  c.fillStyle = g;
+  c.beginPath(); c.ellipse(0.8, -75.5, 9, 9.4, 0, Math.PI * 0.92, Math.PI * 2.04); c.lineTo(9.6, -73); c.lineTo(6.4, -73); c.lineTo(6.4, -77); c.lineTo(-1, -77); c.lineTo(-1.4, -67.5); c.lineTo(-8.4, -68.5); c.closePath(); c.fill();
+  c.fillStyle = shade(H.c, -25); c.fillRect(6.2, -78, 1.8, 7.6);
+  c.strokeStyle = H.p || shade(H.c, -50); c.lineWidth = 1.3; c.beginPath(); c.moveTo(-8.2, -77.6); c.quadraticCurveTo(1, -79.6, 9.6, -77.4); c.stroke();
+  if(H.t === 'plume'){
+    const sw = Math.sin(time * 3) * 1.5;
+    c.strokeStyle = H.p; c.lineWidth = 3.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(1, -84.5); c.quadraticCurveTo(-6, -92 + sw, -15, -82 + sw); c.stroke();
+    c.lineWidth = 2.2; c.strokeStyle = shade(H.p, 40); c.beginPath(); c.moveTo(1, -85); c.quadraticCurveTo(-5, -91 + sw, -12, -84 + sw); c.stroke();
+  } else if(H.t === 'horn'){
+    c.fillStyle = '#d8ccb0';
+    c.beginPath(); c.moveTo(3, -83); c.quadraticCurveTo(7, -88, 13, -95); c.quadraticCurveTo(9, -87, 6.5, -81.4); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(-3.5, -83.4); c.quadraticCurveTo(-8, -89, -13, -95); c.quadraticCurveTo(-10, -86, -6.6, -80.6); c.closePath(); c.fill();
+    c.strokeStyle = H.p; c.shadowColor = H.p; c.shadowBlur = 8; c.lineWidth = 1.2; c.beginPath(); c.moveTo(1.5, -75.8); c.lineTo(6.2, -75.8); c.stroke(); c.shadowBlur = 0;
+  } else if(H.t === 'dragon'){
+    c.fillStyle = H.p; c.shadowColor = H.p; c.shadowBlur = 6;
+    for(let k = 0; k < 4; k++){ const x0 = 5 - k * 4, y0 = -84 + Math.abs(k - 1) * 0.8; c.beginPath(); c.moveTo(x0 + 1.6, y0 + 1); c.lineTo(x0 - 2.5, y0 - 6 + k * 0.5); c.lineTo(x0 - 1.8, y0 + 1.6); c.closePath(); c.fill(); }
+    c.shadowBlur = 0;
   }
-  // 武器與前手
-  c.save(); c.translate(9, -18 + sw * 0.3);
-  const p = 1 - atk;
-  if(o.weapon === 'sword' || o.weapon === 'rusty'){
-    const ang = atk > 0 ? -1.7 + p * 3.1 : 0.45;
-    c.rotate(ang);
-    c.fillStyle = '#6b4226'; c.fillRect(-1.5, -2, 3, 8);
-    c.fillStyle = o.weapon === 'rusty' ? '#7a6a4a' : '#f0c040'; c.fillRect(-5.5, -4.5, 11, 3);
-    c.fillStyle = o.weapon === 'rusty' ? '#9a8a70' : (o.glow ? '#fff6d0' : '#e2eaf2');
-    c.beginPath(); c.moveTo(-2.6, -4.5); c.lineTo(-2.6, -27); c.lineTo(0, -32); c.lineTo(2.6, -27); c.lineTo(2.6, -4.5); c.closePath(); c.fill();
-    c.strokeStyle = 'rgba(80,90,110,.6)'; c.lineWidth = 1; c.stroke();
-    if(o.glow){ c.strokeStyle = 'rgba(255,140,60,.8)'; c.lineWidth = 2; c.stroke(); }
-  } else if(o.weapon === 'staff'){
-    const ang = atk > 0 ? 0.15 + Math.sin(p * Math.PI) * 0.9 : 0.1;
-    c.rotate(ang);
-    c.fillStyle = '#7b4a2a'; c.fillRect(-1.6, -30, 3.2, 40);
-    c.fillStyle = '#c9a24a'; c.beginPath(); c.moveTo(-5, -30); c.lineTo(0, -26); c.lineTo(5, -30); c.lineTo(0, -34); c.closePath(); c.fill();
-    c.shadowColor = '#7ab8ff'; c.shadowBlur = 12; c.fillStyle = atk > 0 ? '#ffffff' : '#9fd0ff';
-    c.beginPath(); c.arc(0, -36, 5 + Math.sin((o.time || 0) * 5) * 0.6, 0, PI2); c.fill(); c.shadowBlur = 0;
-  } else if(o.weapon === 'bow'){
-    c.translate(3, -2);
-    c.strokeStyle = '#8b5a2b'; c.lineWidth = 3; c.beginPath(); c.arc(-6, 0, 16, -1.15, 1.15); c.stroke();
-    const pull = atk > 0.4 ? (1 - atk) * 14 : 0;
-    c.strokeStyle = '#eee'; c.lineWidth = 1; c.beginPath(); c.moveTo(0.6, -14.6); c.lineTo(0.6 - pull, 0); c.lineTo(0.6, 14.6); c.stroke();
-    if(pull > 0){ c.fillStyle = '#ddd'; c.fillRect(0.6 - pull, -0.7, 18, 1.4); }
-  } else if(o.weapon === 'hammer'){
-    const ang = Math.sin((o.time || 0) * 3) * 0.5 + 0.3;
-    c.rotate(ang); c.fillStyle = '#6b4226'; c.fillRect(-1.5, -18, 3, 22); c.fillStyle = '#8a8f99'; rr(c, -7, -25, 14, 9, 2); c.fill();
+}
+function drawWeapon(c, h, W, atk, time){
+  const tier = clamp(W.tier || 0, 0, 6), glow = W.q >= 2 ? QC[W.q] : null, p = 1 - atk;
+  c.save(); c.translate(h.hx, h.hy);
+  if(W.type === 'sword' || W.type === 'rusty'){
+    c.rotate(-h.ang);
+    const rusty = W.type === 'rusty', len = 24 + tier * 2.2, bw = 1.6 + tier * 0.15;
+    c.fillStyle = '#3a2618'; c.fillRect(-1.1, -6, 2.2, 7);
+    c.fillStyle = rusty ? '#6a5a40' : WEAPON_LOOK.guard[tier]; c.beginPath(); c.arc(0, -6.6, 1.7, 0, PI2); c.fill();
+    const gw = 5 + tier * 0.45;
+    c.beginPath(); c.moveTo(-gw, 0.6); c.quadraticCurveTo(0, tier >= 4 ? 3.6 : 1.4, gw, 0.6); c.lineTo(gw, 2.8); c.lineTo(-gw, 2.8); c.closePath(); c.fill();
+    if(glow){ c.shadowColor = glow; c.shadowBlur = 8 + W.q * 2; }
+    c.fillStyle = rusty ? '#8a7a60' : WEAPON_LOOK.blade[tier];
+    c.beginPath(); c.moveTo(-bw, 2.8); c.lineTo(-bw, len); c.lineTo(0, len + 4.5); c.lineTo(bw, len); c.lineTo(bw, 2.8); c.closePath(); c.fill();
+    c.shadowBlur = 0;
+    c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(0, 3.5); c.lineTo(0, len - 2); c.stroke();
+    const edge = rusty ? null : WEAPON_LOOK.edge[tier];
+    if(edge){ c.strokeStyle = edge; c.shadowColor = edge; c.shadowBlur = 6; c.lineWidth = 0.9; c.beginPath(); c.moveTo(bw, 3); c.lineTo(bw, len); c.lineTo(0, len + 4.5); c.stroke(); c.shadowBlur = 0; }
+  } else if(W.type === 'staff'){
+    c.rotate(atk > 0 ? Math.sin(p * Math.PI) * 0.7 : 0.06);
+    c.strokeStyle = WEAPON_LOOK.wood[tier]; c.lineWidth = 2.6; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(0, 20); c.lineTo(0, -40); c.stroke();
+    c.strokeStyle = WEAPON_LOOK.guard[tier]; c.lineWidth = 1.6;
+    c.beginPath(); c.moveTo(0, -38); c.quadraticCurveTo(-6, -42, -3.5, -50); c.moveTo(0, -38); c.quadraticCurveTo(6, -42, 3.5, -50); c.stroke();
+    const gc = WEAPON_LOOK.gem[tier], r = 3 + tier * 0.4 + Math.sin(time * 4) * 0.4;
+    c.shadowColor = gc; c.shadowBlur = 10 + tier * 2 + (atk > 0 ? 10 : 0); c.fillStyle = atk > 0 ? '#fff' : gc;
+    c.beginPath(); c.moveTo(0, -44 - r * 1.4); c.lineTo(r, -44); c.lineTo(0, -44 + r * 1.2); c.lineTo(-r, -44); c.closePath(); c.fill(); c.shadowBlur = 0;
+  } else if(W.type === 'bow'){
+    c.rotate(atk > 0 ? 0 : 0.55);
+    const R = 19 + tier * 0.8, tipX = -7 + R * Math.cos(1.05), tipY = R * Math.sin(1.05);
+    if(glow){ c.shadowColor = glow; c.shadowBlur = 8; }
+    c.strokeStyle = WEAPON_LOOK.wood[tier]; c.lineWidth = 2.6; c.beginPath(); c.arc(-7, 0, R, -1.05, 1.05); c.stroke(); c.shadowBlur = 0;
+    if(tier >= 3){ c.fillStyle = WEAPON_LOOK.guard[tier]; for(const sy of [-1, 1]){ c.beginPath(); c.arc(tipX, sy * tipY, 1.8, 0, PI2); c.fill(); } c.fillRect(R - 8.5, -2.5, 3, 5); }
+    const pull = atk > 0.3 ? (1 - atk) * 20 : 0;
+    c.strokeStyle = '#e8e8e8'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(tipX, -tipY); c.lineTo(tipX - pull, 0); c.lineTo(tipX, tipY); c.stroke();
+    if(pull > 0){ c.fillStyle = '#c8b090'; c.fillRect(tipX - pull, -0.6, 26, 1.2); c.fillStyle = '#ddd'; c.beginPath(); c.moveTo(tipX - pull + 30, 0); c.lineTo(tipX - pull + 25, -2.4); c.lineTo(tipX - pull + 25, 2.4); c.fill(); }
+  } else if(W.type === 'hammer'){
+    c.rotate(-h.ang + Math.PI);
+    c.fillStyle = '#4a3020'; c.fillRect(-1.1, -4, 2.2, 22);
+    c.fillStyle = '#6a6f78'; rr(c, -5.5, 15, 11, 8, 1.5); c.fill(); c.fillStyle = '#8a9098'; c.fillRect(-5.5, 15, 11, 2.4);
   }
   c.restore();
-  c.fillStyle = skin; c.beginPath(); c.arc(9, -18 + sw * 0.3, 3.8, 0, PI2); c.fill();
+}
+function drawHero(c, x, y, o){
+  const L = o.look, s = o.scale || 1, face = o.face < 0 ? -1 : 1, fem = L.gender === 'female', bone = L.style === 'bone';
+  const t = o.walk || 0, mv = !!o.moving, atk = o.atk || 0, time = o.time || 0;
+  const AL = L.armor >= 0 ? ARMOR_LOOK[L.armor] : null;
+  const main = AL ? AL.main : L.outfit.main, trim = AL ? AL.trim : L.outfit.trim, glowC = AL && AL.glow;
+  const cloak = bone ? null : ((AL && AL.cloak) || L.cloak || null);
+  const skin = bone ? '#ddd6c0' : (L.skin || '#e2b896');
+  const bootC = L.boots >= 0 ? BOOT_LOOK[L.boots] : '#3a2e24';
+  const pants = bone ? skin : L.style === 'robe' ? shade(main, -25) : (L.pants || '#2a2622');
+  const shW = fem ? 8.6 : 10.6, waW = fem ? 5.2 : 6.8, hiW = fem ? 8.2 : 7.6, SH = -61, WA = -45, HI = -38;
+  c.save(); c.translate(x, y);
+  if(!o.noShadow){ c.fillStyle = 'rgba(0,0,0,.38)'; ell(c, 0, 0, 15 * s, 4.5 * s); c.fill(); }
+  if(L.aura){ c.globalAlpha = 0.25 + Math.sin(time * 3) * 0.1; c.strokeStyle = L.aura; c.lineWidth = 2; ell(c, 0, 0, 20 * s, 7 * s); c.stroke(); c.globalAlpha = 1; }
+  c.scale(s * face, s);
+  const sw = mv ? Math.sin(t) : 0, bob = mv ? -Math.abs(Math.cos(t)) * 1.8 : Math.sin(time * 2) * 0.5;
+  const sway = Math.sin(time * 2.2) * 1.2 + (mv ? -3 : 0);
+  c.translate(0, bob);
+  // 披風
+  if(cloak){
+    c.fillStyle = shade(cloak, -22);
+    c.beginPath(); c.moveTo(-shW + 2, SH); c.lineTo(shW - 4, SH); c.quadraticCurveTo(2, -32, sway * 0.6, -10);
+    c.quadraticCurveTo(-7 + sway, -7, -shW - 7 + sway * 1.5, -12); c.quadraticCurveTo(-shW - 3, -40, -shW + 2, SH); c.closePath(); c.fill();
+    c.strokeStyle = shade(cloak, 15); c.lineWidth = 1; c.beginPath(); c.moveTo(-3 + sway * 0.3, -14); c.quadraticCurveTo(-5, -36, -5, -56); c.stroke();
+  }
+  if(!bone) drawHairBack(c, L, time, sway);
+  // 手臂角度
+  const W = L.weapon, wt = W ? W.type : null, p = 1 - atk;
+  let fa = sw * 0.5, fb = 0.25, ba = -sw * 0.5, bb = 0.25;
+  if(wt === 'sword' || wt === 'rusty'){ fa = atk > 0 ? -2.5 + p * 3.3 : 0.3; fb = atk > 0 ? 0.15 : 0.55; }
+  else if(wt === 'staff'){ fa = atk > 0 ? 0.35 + Math.sin(p * Math.PI) * 1.1 : 0.3; fb = -0.3; }
+  else if(wt === 'bow'){ if(atk > 0){ fa = 1.5; fb = 0.05; ba = 1.25; bb = 1.3; } else { fa = 0.35; fb = 0.25; } }
+  else if(wt === 'hammer'){ fa = 0.4 + Math.sin(time * 3) * 0.5; fb = 0.4; }
+  const sleeve = L.style === 'robe' ? main : shade(main, -8);
+  const bracer = bone ? skin : (L.style === 'plate' && AL ? shade(trim, -20) : shade(sleeve, -12));
+  const backH = drawArm(c, -shW + 2.5, SH + 2, ba, bb, bone ? shade(skin, -20) : shade(sleeve, -30), shade(skin, -25), bone, bone ? shade(skin, -20) : shade(bracer, -25));
+  drawHand(c, backH);
+  if(!bone && AL && AL.pad > 0 && L.style !== 'robe') drawPad(c, -shW + 1, SH + 2, AL.pad, shade(main, -30), shade(trim, -25), null);
+  // 腿
+  const lift = mv ? 3 : 0;
+  drawLeg(c, -3, HI, -sw, Math.max(0, -Math.cos(t)) * lift, shade(pants, -25), shade(bootC, -25), bone);
+  drawLeg(c, 3, HI, sw, Math.max(0, Math.cos(t)) * lift, pants, bootC, bone);
+  // 軀幹
+  const tg = c.createLinearGradient(-shW, 0, shW, 0);
+  tg.addColorStop(0, shade(main, -38)); tg.addColorStop(0.55, main); tg.addColorStop(1, shade(main, 20));
+  if(bone){
+    limb(c, 0, SH, 0, HI, 2.2, skin);
+    c.strokeStyle = skin; c.lineWidth = 1.6;
+    for(let k = 0; k < 4; k++){ const yy = SH + 4 + k * 4; c.beginPath(); c.moveTo(-6 + k * 0.8, yy + 2); c.quadraticCurveTo(0, yy - 1, 6 - k * 0.8, yy + 2); c.stroke(); }
+    c.fillStyle = skin; ell(c, 0, HI + 1, 6, 2.8); c.fill();
+    limb(c, -shW + 2, SH + 1, shW - 2, SH + 1, 2.2, skin);
+  } else {
+    if(L.style === 'robe'){
+      c.fillStyle = tg; c.beginPath(); c.moveTo(-waW - 1, WA); c.lineTo(waW + 1, WA); c.lineTo(12.5, -5); c.quadraticCurveTo(0, -1.5, -12.5, -5); c.closePath(); c.fill();
+      c.strokeStyle = trim; c.lineWidth = 1.8; if(glowC){ c.shadowColor = glowC; c.shadowBlur = 6; }
+      c.beginPath(); c.moveTo(1.5, WA); c.lineTo(2.5, -3); c.moveTo(-12, -5.5); c.quadraticCurveTo(0, -2, 12, -5.5); c.stroke(); c.shadowBlur = 0;
+    }
+    c.fillStyle = tg;
+    c.beginPath(); c.moveTo(-shW, SH); c.lineTo(shW, SH); c.quadraticCurveTo(shW - 1, (SH + WA) / 2, waW, WA); c.lineTo(hiW, HI); c.lineTo(-hiW, HI); c.lineTo(-waW, WA); c.quadraticCurveTo(-shW + 1, (SH + WA) / 2, -shW, SH); c.closePath(); c.fill();
+    c.strokeStyle = trim; c.lineWidth = 1.2; if(glowC){ c.shadowColor = glowC; c.shadowBlur = 6; }
+    if(L.style === 'plate'){
+      c.beginPath(); c.moveTo(1, SH + 2); c.lineTo(1, WA - 1);
+      c.moveTo(-shW + 3, SH + 5); c.quadraticCurveTo(1, SH + 12, shW - 3, SH + 5);
+      if(AL && AL.pad >= 2){ c.moveTo(-waW + 1, WA - 6); c.lineTo(waW - 1, WA - 6); }
+      c.stroke();
+    } else if(L.style === 'leather'){
+      c.lineWidth = 2.2; c.strokeStyle = shade(trim, -25); c.beginPath(); c.moveTo(shW - 2, SH + 1); c.lineTo(-waW, WA - 1); c.stroke();
+      c.lineWidth = 1; c.strokeStyle = trim; c.beginPath(); c.moveTo(-shW + 2, SH + 1); c.lineTo(1, SH + 7); c.lineTo(shW - 2, SH + 1); c.stroke();
+    } else {
+      c.beginPath(); c.moveTo(-4, SH); c.lineTo(1, SH + 10); c.lineTo(5.5, SH); c.stroke();
+    }
+    c.shadowBlur = 0;
+    if(fem){ c.strokeStyle = shade(main, -35); c.lineWidth = 0.9; c.beginPath(); c.arc(-2.5, SH + 8, 3.2, 0.3, Math.PI - 0.6); c.moveTo(7.2, SH + 8.6); c.arc(4.4, SH + 8, 3.2, 0.2, Math.PI - 0.5); c.stroke(); }
+    c.fillStyle = '#241a12'; c.fillRect(-waW - 0.6, WA - 1.2, waW * 2 + 1.2, 3.2);
+    c.fillStyle = trim; c.fillRect(0, WA - 1.6, 3, 4);
+    if(L.style === 'plate' && AL && AL.pad >= 1){ c.fillStyle = shade(main, -12); for(const dx of [-5, 1.5]){ c.beginPath(); c.moveTo(dx, WA + 2); c.lineTo(dx + 4.5, WA + 2); c.lineTo(dx + 5, HI + 3); c.lineTo(dx - 0.5, HI + 3); c.closePath(); c.fill(); } }
+    if(L.style === 'robe' && (AL ? L.armor >= 2 : true)){ c.fillStyle = shade(main, -18); c.beginPath(); c.moveTo(-shW - 1, SH + 1); c.quadraticCurveTo(1, SH - 3, shW + 1, SH + 1); c.quadraticCurveTo(1, SH + 9, -shW - 1, SH + 1); c.fill(); c.strokeStyle = trim; c.lineWidth = 1; c.stroke(); }
+  }
+  // 頸與頭
+  c.fillStyle = shade(skin, -18); c.fillRect(-2.2, SH - 7, 4.4, 8);
+  if(bone){
+    c.fillStyle = skin; ell(c, 1, -74, 7, 7.8); c.fill();
+    c.fillRect(-1, -68, 8, 4);
+    c.fillStyle = '#1a1410'; ell(c, 4.4, -75, 2.3, 2.7); c.fill(); ell(c, -0.6, -75.3, 1.6, 2.4); c.fill();
+    c.fillStyle = '#ff3a2a'; c.shadowColor = '#ff3a2a'; c.shadowBlur = 6; ell(c, 4.6, -74.8, 0.9, 0.9); c.fill(); c.shadowBlur = 0;
+    c.strokeStyle = '#1a1410'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(0, -66); c.lineTo(7, -66); for(let k = 0; k < 4; k++){ c.moveTo(0.5 + k * 2, -67.6); c.lineTo(0.5 + k * 2, -64.6); } c.stroke();
+  } else {
+    c.fillStyle = skin; ell(c, 1, -74, 6.8, 8.2); c.fill();
+    c.fillStyle = shade(skin, -14); c.beginPath(); c.moveTo(-5.5, -70); c.quadraticCurveTo(1, -64.6, 7.4, -69); c.quadraticCurveTo(3, -66.6, -5.5, -70); c.fill();
+    c.fillStyle = shade(skin, -22); ell(c, -1.4, -74, 1.6, 2.4); c.fill();
+    c.fillStyle = '#16100c';
+    if(fem){ c.fillRect(3.3, -76.2, 2.9, 2); c.strokeStyle = '#16100c'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(3, -76.4); c.lineTo(7, -77); c.stroke(); }
+    else c.fillRect(3.4, -75.8, 2.6, 1.5);
+    c.strokeStyle = shade(L.hairCol, -30); c.lineWidth = 1.1; c.beginPath();
+    if(fem){ c.moveTo(2.8, -78.6); c.quadraticCurveTo(4.8, -79.6, 6.8, -78.8); } else { c.moveTo(2.6, -78.2); c.lineTo(6.8, -77.4); }
+    c.stroke();
+    c.strokeStyle = shade(skin, -45); c.lineWidth = 0.9; c.beginPath(); c.moveTo(7.6, -75.2); c.lineTo(8.7, -72.4); c.lineTo(7.4, -72); c.stroke();
+    c.strokeStyle = fem ? '#a8504a' : shade(skin, -50); c.lineWidth = fem ? 1.3 : 0.9; c.beginPath(); c.moveTo(5, -69.6); c.lineTo(7.4, -69.9); c.stroke();
+    if(L.beard){ c.fillStyle = L.hairCol; c.beginPath(); c.moveTo(-0.5, -73); c.quadraticCurveTo(0, -63.5, 5, -62.5); c.quadraticCurveTo(8.6, -63.6, 8.6, -69); c.lineTo(7.2, -68.6); c.quadraticCurveTo(4, -67.4, 1.8, -71); c.closePath(); c.fill(); }
+    const fullHelm = L.helmet >= 2 && L.helmet !== 6;
+    if(!fullHelm) drawHairTop(c, L);
+  }
+  if(L.helmet >= 0) drawHelm(c, L.helmet, time);
+  // 前手與武器
+  const frontH = drawArm(c, shW - 2.5, SH + 2, fa, fb, bone ? skin : sleeve, skin, bone, bracer);
+  if(W) drawWeapon(c, frontH, W, atk, time);
+  drawHand(c, frontH);
+  if(!bone && AL && AL.pad > 0 && L.style !== 'robe') drawPad(c, shW - 1, SH + 2.5, AL.pad, main, trim, glowC);
   c.restore();
 }
 function drawStar(c, x, y, r, r2){
@@ -1132,11 +1301,6 @@ function drawStar(c, x, y, r, r2){
   for(let i = 0; i < 10; i++){ const a = -Math.PI / 2 + i * Math.PI / 5, rr2 = i % 2 ? r2 : r; c.lineTo(x + Math.cos(a) * rr2, y + Math.sin(a) * rr2); }
   c.closePath(); c.fill();
 }
-function playerLook(p, cls){
-  const C = CLASSES[cls || p.cls];
-  return {...C.look, style:cls || p.cls, weapon:C.weapon};
-}
-
 /* ================= 繪製：怪物 ================= */
 function drawMonster(m){
   const d = m.d, t = m.anim, c = ctx, f = m.face < 0 ? -1 : 1;
@@ -1149,40 +1313,56 @@ function drawMonster(m){
   c.translate(lunge * f, 0);
   switch(d.draw){
     case 'slime': {
-      const sq = 1 + Math.sin(t * (m.moving ? 9 : 4)) * 0.09, w = 17 / sq, h = 22 * sq;
+      const sq = 1 + Math.sin(t * (m.moving ? 9 : 4)) * 0.08, w = 18 / sq, h = 22 * sq;
       c.scale(f, 1);
-      c.fillStyle = d.color; c.beginPath(); c.moveTo(-w, 0); c.bezierCurveTo(-w, -h * 1.25, w, -h * 1.25, w, 0); c.closePath(); c.fill();
-      c.fillStyle = 'rgba(0,80,0,.25)'; ell(c, 0, -2, w * 0.9, 3); c.fill();
-      c.fillStyle = 'rgba(255,255,255,.55)'; ell(c, -7, -h * 0.72, 4, 2.6); c.fill();
-      c.fillStyle = '#123'; ell(c, -1, -h * 0.48, 2.3, 3.2); c.fill(); ell(c, 7, -h * 0.48, 2.3, 3.2); c.fill();
-      c.fillStyle = '#fff'; ell(c, -0.3, -h * 0.52, 0.9, 1); c.fill(); ell(c, 7.7, -h * 0.52, 0.9, 1); c.fill();
-      c.fillStyle = 'rgba(255,120,150,.5)'; ell(c, -6, -h * 0.32, 2.6, 1.5); c.fill(); ell(c, 12, -h * 0.32, 2.6, 1.5); c.fill();
+      const g = c.createRadialGradient(-4, -h * 0.7, 2, 0, -h * 0.4, w * 1.3);
+      g.addColorStop(0, '#c8f080'); g.addColorStop(0.45, d.color); g.addColorStop(1, '#1a3a0e');
+      c.globalAlpha = 0.92; c.fillStyle = g;
+      c.beginPath(); c.moveTo(-w, 0); c.bezierCurveTo(-w * 1.05, -h * 1.3, w * 1.05, -h * 1.3, w, 0); c.closePath(); c.fill();
+      c.globalAlpha = 1;
+      c.fillStyle = 'rgba(20,40,10,.55)'; ell(c, -2, -h * 0.35, w * 0.45, h * 0.25); c.fill();
+      c.fillStyle = 'rgba(220,255,160,.5)'; ell(c, -7, -h * 0.75, 3, 1.8); c.fill(); ell(c, 6, -h * 0.25, 1.6, 1.6); c.fill();
+      for(const dx of [-w * 0.8, w * 0.6]){ c.fillStyle = d.color; ell(c, dx, 1.5 + Math.sin(t * 3 + dx) * 1, 2, 3); c.fill(); }
+      c.fillStyle = '#eaff5a'; c.shadowColor = '#eaff5a'; c.shadowBlur = 8;
+      c.beginPath(); c.moveTo(-3, -h * 0.62); c.lineTo(3, -h * 0.5); c.lineTo(-2, -h * 0.48); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(11, -h * 0.62); c.lineTo(5, -h * 0.5); c.lineTo(10, -h * 0.48); c.closePath(); c.fill();
+      c.shadowBlur = 0;
       break;
     }
     case 'mushroom': {
-      const hop = m.moving ? -Math.abs(Math.sin(t * 8)) * 5 : 0;
+      const hop = m.moving ? -Math.abs(Math.sin(t * 8)) * 4 : 0;
       c.scale(f, 1); c.translate(0, hop);
-      c.fillStyle = '#f3e3c3'; rr(c, -9, -20, 18, 20, 7); c.fill();
-      c.fillStyle = '#3a2416'; ell(c, -1, -11, 1.8, 2.6); c.fill(); ell(c, 5, -11, 1.8, 2.6); c.fill();
-      c.strokeStyle = '#3a2416'; c.lineWidth = 1.2; c.beginPath(); c.arc(2, -7, 2, 0.3, Math.PI - 0.3); c.stroke();
-      c.fillStyle = d.color; c.beginPath(); c.moveTo(-20, -18); c.quadraticCurveTo(-20, -42, 0, -42); c.quadraticCurveTo(20, -42, 20, -18); c.quadraticCurveTo(0, -12, -20, -18); c.fill();
-      c.fillStyle = '#fff'; ell(c, -9, -30, 4, 3); c.fill(); ell(c, 6, -35, 3.5, 2.6); c.fill(); ell(c, 11, -24, 3, 2.4); c.fill(); ell(c, -2, -22, 2.4, 1.8); c.fill();
+      c.strokeStyle = '#6a5a44'; c.lineWidth = 2; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(-6, -14); c.quadraticCurveTo(-14, -12, -15, -4 + Math.sin(t * 5) * 2); c.moveTo(6, -14); c.quadraticCurveTo(14, -16, 17, -9 + Math.cos(t * 5) * 2); c.stroke();
+      const sg = c.createLinearGradient(-8, 0, 8, 0); sg.addColorStop(0, '#6a5e4a'); sg.addColorStop(1, '#b8a888');
+      c.fillStyle = sg; c.beginPath(); c.moveTo(-8, 0); c.quadraticCurveTo(-10, -12, -7, -22); c.lineTo(7, -22); c.quadraticCurveTo(10, -10, 8, 0); c.closePath(); c.fill();
+      c.fillStyle = '#ffb030'; c.shadowColor = '#ffb030'; c.shadowBlur = 8;
+      c.beginPath(); c.moveTo(-2, -15); c.lineTo(2.5, -13); c.lineTo(-1.5, -12); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(7.5, -15); c.lineTo(3.5, -13); c.lineTo(7, -12); c.closePath(); c.fill(); c.shadowBlur = 0;
+      c.strokeStyle = '#2a1a10'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(0, -7); c.lineTo(2.5, -8.4); c.lineTo(5, -7); c.stroke();
+      const cg = c.createLinearGradient(0, -44, 0, -18); cg.addColorStop(0, shade(d.color, 30)); cg.addColorStop(1, shade(d.color, -30));
+      c.fillStyle = cg; c.beginPath(); c.moveTo(-22, -18); c.quadraticCurveTo(-22, -44, 0, -44); c.quadraticCurveTo(22, -44, 22, -18); c.quadraticCurveTo(0, -12, -22, -18); c.fill();
+      c.fillStyle = '#7af0e0'; c.shadowColor = '#7af0e0'; c.shadowBlur = 8 + Math.sin(t * 3) * 3;
+      for(const [sx, sy, r] of [[-10, -31, 3.2], [5, -37, 2.6], [12, -25, 2.2], [-2, -23, 1.8]]){ ell(c, sx, sy, r, r * 0.8); c.fill(); }
+      c.shadowBlur = 0;
       break;
     }
     case 'wolf': {
       c.scale(f, 1);
-      const lg = m.moving ? Math.sin(t * 12) * 4 : 0;
-      c.strokeStyle = shade(d.color, -40); c.lineWidth = 4; c.lineCap = 'round';
-      c.beginPath(); c.moveTo(-10, -10); c.lineTo(-10 + lg, 0); c.moveTo(-4, -10); c.lineTo(-4 - lg, 0); c.moveTo(6, -10); c.lineTo(6 - lg, 0); c.moveTo(11, -10); c.lineTo(11 + lg, 0); c.stroke();
-      c.strokeStyle = d.color; c.lineWidth = 6; c.beginPath(); c.moveTo(-15, -17); c.quadraticCurveTo(-26, -24, -24, -34 + Math.sin(t * 6) * 3); c.stroke();
-      c.fillStyle = d.color; ell(c, 0, -16, 17, 9); c.fill();
-      c.fillStyle = '#d9dde3'; ell(c, 3, -11, 10, 4); c.fill();
-      c.fillStyle = d.color; c.beginPath(); c.arc(15, -26, 11, 0, PI2); c.fill();
-      c.beginPath(); c.moveTo(8, -33); c.lineTo(9, -45); c.lineTo(15, -36); c.closePath(); c.fill();
-      c.beginPath(); c.moveTo(16, -35); c.lineTo(21, -46); c.lineTo(23, -33); c.closePath(); c.fill();
-      c.fillStyle = '#d9dde3'; ell(c, 23, -22, 7, 5); c.fill();
-      c.fillStyle = '#222'; ell(c, 29, -24, 2, 1.8); c.fill();
-      c.fillStyle = '#ffcf33'; ell(c, 17, -28, 2.6, 2.6); c.fill(); c.fillStyle = '#222'; ell(c, 17.6, -28, 1.1, 1.8); c.fill();
+      const lg = m.moving ? Math.sin(t * 12) * 5 : 0;
+      c.strokeStyle = shade(d.color, -30); c.lineWidth = 4; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(-12, -12); c.lineTo(-13 + lg, 0); c.moveTo(-6, -12); c.lineTo(-6 - lg, 0); c.moveTo(8, -12); c.lineTo(9 - lg, 0); c.moveTo(13, -12); c.lineTo(14 + lg, 0); c.stroke();
+      c.fillStyle = d.color; c.beginPath(); c.moveTo(-18, -20); c.quadraticCurveTo(-32, -24 + Math.sin(t * 6) * 3, -34, -14 + Math.sin(t * 6) * 3); c.quadraticCurveTo(-26, -16, -18, -14); c.fill();
+      const bg = c.createLinearGradient(0, -30, 0, -8); bg.addColorStop(0, shade(d.color, 20)); bg.addColorStop(1, shade(d.color, -30));
+      c.fillStyle = bg; ell(c, 0, -18, 20, 9); c.fill();
+      c.fillStyle = shade(d.color, -25);
+      c.beginPath(); c.moveTo(-14, -25); for(let k = 0; k < 6; k++){ c.lineTo(-12 + k * 5, -31 - (k % 2) * 3); c.lineTo(-10 + k * 5, -25); } c.closePath(); c.fill();
+      c.fillStyle = d.color; c.beginPath(); c.moveTo(12, -30); c.lineTo(20, -36); c.lineTo(34, -26); c.lineTo(33, -22); c.lineTo(22, -19); c.lineTo(12, -18); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(15, -33); c.lineTo(15, -45); c.lineTo(21, -35); c.closePath(); c.fill();
+      c.fillStyle = shade(d.color, -20); c.beginPath(); c.moveTo(19, -34); c.lineTo(22, -45); c.lineTo(25, -32); c.closePath(); c.fill();
+      c.fillStyle = '#111'; ell(c, 33.5, -25, 1.8, 1.6); c.fill();
+      c.fillStyle = '#ff3a2a'; c.shadowColor = '#ff3a2a'; c.shadowBlur = 8; c.beginPath(); c.moveTo(20, -30); c.lineTo(26, -29); c.lineTo(21, -28); c.closePath(); c.fill(); c.shadowBlur = 0;
+      c.fillStyle = '#eee'; c.beginPath(); c.moveTo(28, -22); c.lineTo(29, -19); c.lineTo(30, -22); c.fill();
       break;
     }
     case 'bat': {
@@ -1200,7 +1380,7 @@ function drawMonster(m){
     case 'skeleton':
       c.restore(); c.save(); c.translate(m.x + lunge * f, m.y);
       if(m.hitFlash > 0) c.filter = 'brightness(2.2)';
-      drawChibi(c, 0, 0, {style:'skeleton', body:'#e9e5d8', skin:'#f2efe6', hair:'#8a6a3a', pants:'#5a5448', shoe:'#3a352c', weapon:'rusty', face:m.face, walk:m.anim * 10, moving:m.moving, atk:m.atkAnim, time:m.anim, noShadow:true});
+      drawHero(c, 0, 0, {look:SKEL_LOOK, face:m.face, walk:m.anim * 10, moving:m.moving, atk:m.atkAnim, time:m.anim, noShadow:true});
       break;
     case 'spider': {
       c.scale(f, 1);
@@ -1293,24 +1473,42 @@ function drawDeco(o){
   const c = ctx, s = o.s || 1;
   c.save(); c.translate(o.x, o.y);
   switch(o.t){
-    case 'tree':
-      c.fillStyle = 'rgba(0,0,0,.22)'; ell(c, 0, 0, 22 * s, 8 * s); c.fill();
-      c.fillStyle = '#7a4a28'; rr(c, -5 * s, -28 * s, 10 * s, 30 * s, 3); c.fill();
-      c.fillStyle = o.v < 0.5 ? '#2f8a3a' : '#3a9a3a'; c.beginPath(); c.arc(0, -42 * s, 24 * s, 0, PI2); c.fill();
-      c.beginPath(); c.arc(-15 * s, -32 * s, 15 * s, 0, PI2); c.arc(15 * s, -32 * s, 15 * s, 0, PI2); c.fill();
-      c.fillStyle = o.v < 0.5 ? '#45a84a' : '#56b84a'; c.beginPath(); c.arc(-6 * s, -50 * s, 13 * s, 0, PI2); c.fill();
-      if(o.v > 0.75){ c.fillStyle = '#ff5a5a'; for(const [ax, ay] of [[-10, -38], [8, -46], [12, -30]]){ c.beginPath(); c.arc(ax * s, ay * s, 3, 0, PI2); c.fill(); } }
+    case 'tree': {
+      const k = s * 1.35, pal = [['#1e3a1c', '#2a4a24', '#3a5e2e'], ['#22401e', '#2e5226', '#426a32'], ['#26381c', '#344a22', '#4a6230']][Math.floor(o.v * 3)];
+      c.fillStyle = 'rgba(0,0,0,.3)'; ell(c, 0, 0, 26 * k, 8 * k); c.fill();
+      const tg = c.createLinearGradient(-6 * k, 0, 6 * k, 0); tg.addColorStop(0, '#24170e'); tg.addColorStop(1, '#5a3e28');
+      c.fillStyle = tg; c.beginPath(); c.moveTo(-7 * k, 0); c.quadraticCurveTo(-4 * k, -14 * k, -4 * k, -34 * k); c.lineTo(4 * k, -34 * k); c.quadraticCurveTo(4 * k, -14 * k, 8 * k, 0); c.closePath(); c.fill();
+      const blobs = [[0, -50, 23], [-15, -40, 15], [15, -42, 16], [-7, -62, 15], [9, -60, 14]];
+      c.fillStyle = pal[0]; for(const [bx, by, br] of blobs){ c.beginPath(); c.arc(bx * k, by * k, br * k, 0, PI2); c.fill(); }
+      c.fillStyle = pal[1]; for(const [bx, by, br] of blobs){ c.beginPath(); c.arc((bx + 2) * k, (by - 3) * k, br * 0.75 * k, 0, PI2); c.fill(); }
+      c.fillStyle = pal[2]; for(const [bx, by, br] of blobs.slice(2)){ c.beginPath(); c.arc((bx + 4) * k, (by - 6) * k, br * 0.4 * k, 0, PI2); c.fill(); }
       break;
-    case 'pine':
-      c.fillStyle = 'rgba(0,0,0,.22)'; ell(c, 0, 0, 18 * s, 7 * s); c.fill();
-      c.fillStyle = '#6a4024'; c.fillRect(-4 * s, -16 * s, 8 * s, 17 * s);
-      for(let k = 0; k < 3; k++){ c.fillStyle = k % 2 ? '#2a7a4a' : '#22693e'; c.beginPath(); c.moveTo(-22 * s + k * 4 * s, -12 * s - k * 16 * s); c.lineTo(0, -44 * s - k * 16 * s); c.lineTo(22 * s - k * 4 * s, -12 * s - k * 16 * s); c.closePath(); c.fill(); }
+    }
+    case 'pine': {
+      const k = s * 1.3;
+      c.fillStyle = 'rgba(0,0,0,.3)'; ell(c, 0, 0, 20 * k, 7 * k); c.fill();
+      c.fillStyle = '#2e1e14'; c.fillRect(-3.5 * k, -16 * k, 7 * k, 17 * k);
+      for(let i = 0; i < 4; i++){
+        const yb = -12 * k - i * 14 * k, wd = (24 - i * 4.5) * k;
+        c.fillStyle = '#16302a'; c.beginPath(); c.moveTo(-wd, yb); c.lineTo(0, yb - 30 * k); c.lineTo(wd, yb); c.closePath(); c.fill();
+        c.fillStyle = '#1f4436'; c.beginPath(); c.moveTo(0, yb - 30 * k); c.lineTo(wd, yb); c.lineTo(wd * 0.2, yb - 2 * k); c.closePath(); c.fill();
+      }
       break;
+    }
     case 'bush':
-      c.fillStyle = 'rgba(0,0,0,.2)'; ell(c, 0, 0, 18 * s, 6 * s); c.fill();
-      c.fillStyle = '#3c9a3c'; c.beginPath(); c.arc(-9 * s, -8 * s, 10 * s, 0, PI2); c.arc(9 * s, -8 * s, 10 * s, 0, PI2); c.arc(0, -14 * s, 11 * s, 0, PI2); c.fill();
-      c.fillStyle = '#5ab84a'; c.beginPath(); c.arc(-3 * s, -17 * s, 5 * s, 0, PI2); c.fill();
+      c.fillStyle = 'rgba(0,0,0,.25)'; ell(c, 0, 0, 20 * s, 6 * s); c.fill();
+      c.fillStyle = '#22401e'; c.beginPath(); c.arc(-10 * s, -9 * s, 11 * s, 0, PI2); c.arc(10 * s, -9 * s, 11 * s, 0, PI2); c.arc(0, -16 * s, 12 * s, 0, PI2); c.fill();
+      c.fillStyle = '#34562a'; c.beginPath(); c.arc(2 * s, -19 * s, 6 * s, 0, PI2); c.arc(12 * s, -12 * s, 5 * s, 0, PI2); c.fill();
       break;
+    case 'lamp': {
+      c.fillStyle = 'rgba(0,0,0,.3)'; ell(c, 0, 0, 8, 3); c.fill();
+      c.fillStyle = '#1e1e24'; c.fillRect(-2, -64, 4, 64); c.fillRect(-6, -4, 12, 4); c.fillRect(-1, -66, 12, 2.5);
+      const fl = 0.8 + Math.sin(gt * 9 + o.v * 20) * 0.08;
+      const lg = c.createRadialGradient(9, -56, 2, 9, -56, 70); lg.addColorStop(0, `rgba(255,190,90,${0.28 * fl})`); lg.addColorStop(1, 'rgba(255,190,90,0)'); c.fillStyle = lg; c.beginPath(); c.arc(9, -56, 70, 0, PI2); c.fill();
+      c.fillStyle = '#1e1e24'; c.fillRect(4, -64, 10, 3); c.fillRect(5, -50, 8, 2);
+      c.fillStyle = `rgba(255,210,120,${fl})`; c.shadowColor = '#ffb040'; c.shadowBlur = 14; c.fillRect(5.5, -61, 7, 11); c.shadowBlur = 0;
+      break;
+    }
     case 'shroom':
       c.fillStyle = '#f3e3c3'; c.fillRect(-2, -8, 4, 8); c.fillStyle = '#e2553f'; c.beginPath(); c.arc(0, -8, 7, Math.PI, PI2); c.fill();
       c.fillStyle = '#fff'; c.beginPath(); c.arc(-2, -11, 1.5, 0, PI2); c.arc(3, -10, 1.2, 0, PI2); c.fill();
@@ -1365,30 +1563,46 @@ function drawDeco(o){
     }
     case 'house': {
       const roof = o.roof;
-      c.fillStyle = 'rgba(0,0,0,.25)'; ell(c, 0, 2, 72, 14); c.fill();
-      c.fillStyle = '#f3e2c0'; c.fillRect(-56, -62, 112, 64);
-      c.fillStyle = '#d9c39a'; c.fillRect(-56, -10, 112, 12);
-      c.strokeStyle = '#a58a5a'; c.lineWidth = 2; c.strokeRect(-56, -62, 112, 64);
-      c.fillStyle = '#7a4a28'; rr(c, -12, -36, 24, 38, 10); c.fill(); c.fillStyle = '#ffd76a'; c.beginPath(); c.arc(7, -16, 2, 0, PI2); c.fill();
-      for(const wx of [-40, 26]){ c.fillStyle = '#8ad0ff'; c.fillRect(wx, -48, 16, 16); c.strokeStyle = '#7a4a28'; c.lineWidth = 2.5; c.strokeRect(wx, -48, 16, 16); c.beginPath(); c.moveTo(wx + 8, -48); c.lineTo(wx + 8, -32); c.moveTo(wx, -40); c.lineTo(wx + 16, -40); c.stroke(); }
-      c.fillStyle = roof; c.beginPath(); c.moveTo(-70, -58); c.lineTo(0, -112); c.lineTo(70, -58); c.closePath(); c.fill();
-      c.fillStyle = shade(roof, -35); c.fillRect(-70, -62, 140, 8);
-      c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.moveTo(-60, -62); c.lineTo(0, -108); c.lineTo(-10, -62); c.closePath(); c.fill();
-      c.fillStyle = '#8a8a92'; c.fillRect(30, -108, 12, 26);
-      if(Math.random() < 0.04) parts.push({x:o.x + 36, y:o.y - 110, vx:rand(-6, 6), vy:-22, life:2.2, t:0, color:'rgba(230,230,230,.6)', size:5, g:0});
+      c.fillStyle = 'rgba(0,0,0,.35)'; ell(c, 0, 4, 92, 16); c.fill();
+      // 石牆基座
+      c.fillStyle = '#5e5850'; c.fillRect(-74, -40, 148, 42);
+      c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1;
+      for(let r = 0; r < 4; r++) for(let k = 0; k < 9; k++){ const bx = -74 + k * 17 + (r % 2) * 8, by = -40 + r * 10.5; c.strokeRect(Math.max(-74, bx), by, Math.min(17, 74 - bx), 10.5); }
+      // 木框灰泥上層
+      c.fillStyle = '#cfc2a4'; c.fillRect(-70, -96, 140, 56);
+      c.fillStyle = '#3a2618';
+      c.fillRect(-70, -96, 140, 5); c.fillRect(-70, -44, 140, 5);
+      for(const bx of [-70, -36, 30, 64]) c.fillRect(bx, -96, 6, 56);
+      c.strokeStyle = '#3a2618'; c.lineWidth = 4; c.beginPath(); c.moveTo(-64, -91); c.lineTo(-36, -44); c.moveTo(64, -91); c.lineTo(36, -44); c.stroke();
+      // 窗（暖光）
+      for(const wx of [-24, 12]){ c.fillStyle = '#ffcf70'; c.shadowColor = '#ffb040'; c.shadowBlur = 12; c.fillRect(wx, -84, 14, 18); c.shadowBlur = 0;
+        c.strokeStyle = '#3a2618'; c.lineWidth = 2.5; c.strokeRect(wx, -84, 14, 18); c.beginPath(); c.moveTo(wx + 7, -84); c.lineTo(wx + 7, -66); c.moveTo(wx, -75); c.lineTo(wx + 14, -75); c.stroke(); }
+      // 門
+      c.fillStyle = '#2a1a10'; c.beginPath(); c.moveTo(-12, 2); c.lineTo(-12, -26); c.quadraticCurveTo(0, -38, 12, -26); c.lineTo(12, 2); c.closePath(); c.fill();
+      c.strokeStyle = '#4a3020'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-4, -30); c.lineTo(-4, 2); c.moveTo(4, -30); c.lineTo(4, 2); c.stroke();
+      c.fillStyle = '#c9a24a'; c.beginPath(); c.arc(7, -12, 1.6, 0, PI2); c.fill();
+      // 屋頂
+      const rg = c.createLinearGradient(0, -150, 0, -90); rg.addColorStop(0, shade(roof, 25)); rg.addColorStop(1, shade(roof, -25));
+      c.fillStyle = rg; c.beginPath(); c.moveTo(-90, -90); c.lineTo(-40, -152); c.lineTo(40, -152); c.lineTo(90, -90); c.closePath(); c.fill();
+      c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 1.2;
+      for(let r = 1; r < 6; r++){ const yy = -152 + r * 10.4, xx = 40 + r * 8.3; c.beginPath(); c.moveTo(-xx, yy); c.lineTo(xx, yy); c.stroke(); }
+      c.fillStyle = shade(roof, -45); c.fillRect(-92, -92, 184, 6);
+      c.fillStyle = '#4e4840'; c.fillRect(44, -168, 16, 36); c.fillStyle = '#3a3630'; c.fillRect(42, -170, 20, 5);
+      if(Math.random() < 0.05) parts.push({x:o.x + 52, y:o.y - 172, vx:rand(-6, 6), vy:-22, life:2.4, t:0, color:'rgba(180,180,190,.5)', size:5, g:0});
       break;
     }
     case 'well':
-      c.fillStyle = 'rgba(0,0,0,.25)'; ell(c, 0, 2, 26, 9); c.fill();
-      c.fillStyle = '#8a8a92'; ell(c, 0, -8, 22, 10); c.fill(); c.fillRect(-22, -14, 44, 12); ell(c, 0, -2, 22, 9); c.fill();
-      c.fillStyle = '#3a7ac0'; ell(c, 0, -14, 16, 6); c.fill();
-      c.fillStyle = '#7a4a28'; c.fillRect(-20, -48, 4, 36); c.fillRect(16, -48, 4, 36);
-      c.fillStyle = '#b03a2a'; c.beginPath(); c.moveTo(-28, -44); c.lineTo(0, -62); c.lineTo(28, -44); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(0,0,0,.3)'; ell(c, 0, 2, 30, 10); c.fill();
+      c.fillStyle = '#5e5850'; ell(c, 0, -10, 24, 10); c.fill(); c.fillRect(-24, -16, 48, 14); ell(c, 0, -2, 24, 9); c.fill();
+      c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1; for(let k = -20; k <= 20; k += 10){ c.beginPath(); c.moveTo(k, -14); c.lineTo(k, -2); c.stroke(); }
+      c.fillStyle = '#1a2a3a'; ell(c, 0, -16, 18, 6.5); c.fill();
+      c.fillStyle = '#3a2618'; c.fillRect(-22, -58, 5, 44); c.fillRect(17, -58, 5, 44); c.fillRect(-22, -50, 44, 3);
+      c.fillStyle = '#3a3f4a'; c.beginPath(); c.moveTo(-32, -54); c.lineTo(0, -74); c.lineTo(32, -54); c.closePath(); c.fill();
       break;
     case 'fence':
-      c.fillStyle = '#a5743f';
-      for(let k = -2; k <= 2; k++){ c.fillRect(k * 14 - 2, -22, 5, 22); }
-      c.fillRect(-32, -18, 64, 4); c.fillRect(-32, -9, 64, 4);
+      c.fillStyle = '#3a2a1e';
+      for(let k = -2; k <= 2; k++){ c.beginPath(); c.moveTo(k * 15 - 2.5, 0); c.lineTo(k * 15 - 2.5, -22); c.lineTo(k * 15, -26); c.lineTo(k * 15 + 2.5, -22); c.lineTo(k * 15 + 2.5, 0); c.fill(); }
+      c.fillRect(-34, -19, 68, 3.5); c.fillRect(-34, -9, 68, 3.5);
       break;
   }
   c.restore();
@@ -1429,12 +1643,12 @@ function drawDrop(d){
   c.restore();
 }
 function drawNpc(n){
-  drawChibi(ctx, n.x, n.y, {...n.look, face:P.x < n.x ? -1 : 1, time:n.walk, walk:0, moving:false});
+  drawHero(ctx, n.x, n.y, {scale:1.12, look:n.look, face:P.x < n.x ? -1 : 1, time:n.walk, walk:0, moving:false});
   const c = ctx; c.font = 'bold 12px sans-serif'; c.textAlign = 'center'; c.lineWidth = 3; c.strokeStyle = '#000';
-  c.strokeText(n.name, n.x, n.y - 66); c.fillStyle = '#ffe066'; c.fillText(n.name, n.x, n.y - 66);
+  c.strokeText(n.name, n.x, n.y - 110); c.fillStyle = '#f3dca0'; c.fillText(n.name, n.x, n.y - 110);
   let mark = null;
   if(n.id === 'elder'){ const q = QUESTS[P.quest.i]; if(q){ if(!P.quest.acc) mark = ['!', '#ffe066']; else if(P.quest.c >= q.n) mark = ['?', '#7dff8a']; } }
-  if(mark){ const by = n.y - 86 + Math.sin(gt * 4) * 3; c.font = 'bold 22px sans-serif'; c.strokeText(mark[0], n.x, by); c.fillStyle = mark[1]; c.fillText(mark[0], n.x, by); }
+  if(mark){ const by = n.y - 128 + Math.sin(gt * 4) * 3; c.font = 'bold 22px sans-serif'; c.strokeText(mark[0], n.x, by); c.fillStyle = mark[1]; c.fillText(mark[0], n.x, by); }
 }
 
 /* ================= 主渲染 ================= */
@@ -1510,7 +1724,7 @@ function render(){
   // 黑暗
   if(th.dark){
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    const px = (P.x - cam.x) * ZOOM, py = (P.y - 30 - cam.y) * ZOOM;
+    const px = (P.x - cam.x) * ZOOM, py = (P.y - 40 - cam.y) * ZOOM;
     const g = ctx.createRadialGradient(px, py, 90 * ZOOM, px, py, Math.max(W, H) * 0.75);
     g.addColorStop(0, 'rgba(5,0,15,0)'); g.addColorStop(1, `rgba(5,0,15,${th.dark})`);
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
@@ -1528,23 +1742,22 @@ function render(){
 }
 function drawPlayer(){
   if(P.dead){ ctx.save(); ctx.globalAlpha = 0.5; }
-  if(P.buffT > 0){ ctx.fillStyle = `rgba(255,110,60,${0.22 + Math.sin(gt * 8) * 0.08})`; ell(ctx, P.x, P.y, 26, 10); ctx.fill(); if(Math.random() < 0.3) parts.push({x:P.x + rand(-14, 14), y:P.y - rand(0, 40), vx:0, vy:-50, life:0.5, t:0, color:'#ff7043', size:3, g:0}); }
-  ctx.fillStyle = 'rgba(255,240,140,.25)'; ell(ctx, P.x, P.y, 20, 7); ctx.fill();
+  if(P.buffT > 0){ ctx.fillStyle = `rgba(255,110,60,${0.22 + Math.sin(gt * 8) * 0.08})`; ell(ctx, P.x, P.y, 26, 10); ctx.fill(); if(Math.random() < 0.3) parts.push({x:P.x + rand(-14, 14), y:P.y - rand(0, 80), vx:0, vy:-50, life:0.5, t:0, color:'#ff7043', size:3, g:0}); }
+  ctx.fillStyle = 'rgba(243,220,160,.12)'; ell(ctx, P.x, P.y, 20, 7); ctx.fill();
   if(P.hitFlash > 0) ctx.filter = 'brightness(1.8) saturate(.4)';
-  drawChibi(ctx, P.x, P.y, {...playerLook(P), face:P.face, walk:P.walk, moving:P.moving, atk:P.atkAnim, time:gt, glow:P.buffT > 0, hurt:P.hitFlash > 0});
+  drawHero(ctx, P.x, P.y, {scale:1.12, look:heroLook(P), face:P.face, walk:P.walk, moving:P.moving, atk:P.atkAnim, time:gt});
   ctx.filter = 'none';
   if(P.dead) ctx.restore();
   ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000';
-  const nm = `${P.name}`; ctx.strokeText(nm, P.x, P.y - 66); ctx.fillStyle = '#7dff8a'; ctx.fillText(nm, P.x, P.y - 66);
-  if(P.auto){ ctx.font = '10px sans-serif'; ctx.strokeText('〔自動掛機中〕', P.x, P.y - 80); ctx.fillStyle = '#ffe066'; ctx.fillText('〔自動掛機中〕', P.x, P.y - 80); }
+  const nm = `${P.name}`; ctx.strokeText(nm, P.x, P.y - 110); ctx.fillStyle = '#8ae08a'; ctx.fillText(nm, P.x, P.y - 110);
+  if(P.auto){ ctx.font = '10px sans-serif'; ctx.strokeText('〔自動戰鬥中〕', P.x, P.y - 124); ctx.fillStyle = '#e8b04a'; ctx.fillText('〔自動戰鬥中〕', P.x, P.y - 124); }
 }
 
 /* ================= HUD ================= */
 const mini = $('mini'), mctx = mini.getContext('2d');
 function drawPortrait(){
   const pc = $('portrait').getContext('2d'); pc.setTransform(1, 0, 0, 1, 0, 0); pc.clearRect(0, 0, 116, 116);
-  pc.save(); pc.beginPath(); pc.arc(58, 58, 58, 0, PI2); pc.clip();
-  drawChibi(pc, 58, 150, {...playerLook(P), scale:2.1, face:1, time:0, noShadow:true}); pc.restore();
+  drawHero(pc, 54, 262, {look:heroLook(P), scale:2.8, face:1, time:0, noShadow:true});
 }
 function buildSkillbar(){
   const sb = $('skillbar'); let h = '';
@@ -1633,8 +1846,9 @@ function openBag(){
   }
   const html = `<div class="bag">
     <div class="eqcol">
-      <div style="color:#ffe9a8;font-weight:bold">${esc(P.name)} · ${CLASSES[P.cls].name} · Lv.${P.lv}</div>
-      <div class="eqslots">${eq}</div>
+      <div style="color:#f3dca0;font-weight:bold;margin-bottom:6px">${esc(P.name)} · ${CLASSES[P.cls].name} · Lv.${P.lv}</div>
+      <div class="heroPrev"><canvas id="bagHero" width="220" height="280"></canvas><div class="eqslots">${eq}</div></div>
+      <div style="color:#7a7468;font-size:11px;margin-top:4px">外觀會隨裝備階級改變</div>
       <div class="stats">
         <div>生命 <b>${S.maxHp}</b></div><div>魔力 <b>${S.maxMp}</b></div>
         <div>攻擊 <b>${S.atk}</b></div><div>防禦 <b>${S.def}</b></div>
@@ -1649,7 +1863,9 @@ function openBag(){
       <div class="grid">${inv}</div>
       <div id="detail">${det}</div>
     </div></div>`;
-  openPanel('bag', '🎒 背包與角色', html);
+  openPanel('bag', '背包與角色', html);
+  const hc = $('bagHero').getContext('2d'); hc.clearRect(0, 0, 220, 280);
+  drawHero(hc, 112, 266, {look:heroLook(P), scale:2.6, face:1, time:gt});
 }
 function openNpc(id){
   if(id === 'elder') openElder();
@@ -1768,7 +1984,7 @@ cv.addEventListener('pointerdown', e => {
   let best = null, bd = 1e9;
   for(const m of monsters){ if(m.dead) continue; const d = Math.hypot(m.x - w.x, (m.y - m.d.h * 0.45) - w.y); if(d < m.d.h * 0.5 + 16 && d < bd){ bd = d; best = m; } }
   if(best && !map.safe){ P.target = best; P.moveTo = null; P.npcT = null; return; }
-  for(const n of npcs){ if(Math.hypot(n.x - w.x, (n.y - 28) - w.y) < 34){ P.npcT = n; P.target = null; P.moveTo = null; return; } }
+  for(const n of npcs){ if(Math.hypot(n.x - w.x, (n.y - 44) - w.y) < 40){ P.npcT = n; P.target = null; P.moveTo = null; return; } }
   P.target = null; P.npcT = null; P.moveTo = w; P.autoWander = false; dragMove = true;
 });
 cv.addEventListener('pointermove', e => { if(pDown && dragMove && running && !P.dead){ P.moveTo = toWorld(e); P.manualT = 2.5; } });
@@ -1783,7 +1999,7 @@ $('bRevive').onclick = () => revive();
 /* ================= 存檔 ================= */
 function save(){
   if(!P) return;
-  const keep = ['name', 'cls', 'lv', 'exp', 'gold', 'hpPot', 'mpPot', 'inv', 'eq', 'quest', 'map', 'x', 'y', 'hp', 'mp', 'auto', 'kills'];
+  const keep = ['name', 'cls', 'gender', 'lv', 'exp', 'gold', 'hpPot', 'mpPot', 'inv', 'eq', 'quest', 'map', 'x', 'y', 'hp', 'mp', 'auto', 'kills'];
   const d = {}; for(const k of keep) d[k] = P[k];
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(d)); }catch(_){}
 }
@@ -1792,11 +2008,11 @@ function loadSave(){
 }
 
 /* ================= 開始畫面 ================= */
-let selCls = 'sword';
+let selCls = 'sword', selGender = 'male';
 const cardCtx = {};
 function buildCards(){
   let h = '';
-  for(const k in CLASSES){ const C = CLASSES[k]; h += `<div class="card ${k === selCls ? 'sel' : ''}" data-c="${k}"><canvas width="240" height="240"></canvas><h3>${C.name}</h3><p>${C.desc}</p></div>`; }
+  for(const k in CLASSES){ const C = CLASSES[k]; h += `<div class="card ${k === selCls ? 'sel' : ''}" data-c="${k}"><canvas width="260" height="300"></canvas><h3>${C.name}</h3><p>${C.desc}</p></div>`; }
   $('cards').innerHTML = h;
   $('cards').querySelectorAll('.card').forEach(el => {
     cardCtx[el.dataset.c] = el.querySelector('canvas').getContext('2d');
@@ -1805,12 +2021,14 @@ function buildCards(){
 }
 function drawCards(){
   for(const k in cardCtx){
-    const c = cardCtx[k]; c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, 240, 240);
+    const c = cardCtx[k]; c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, 260, 300);
     const sel = k === selCls;
-    c.fillStyle = sel ? 'rgba(255,215,106,.15)' : 'rgba(255,255,255,.04)'; c.beginPath(); c.arc(120, 140, 90, 0, PI2); c.fill();
+    const g = c.createRadialGradient(130, 270, 10, 130, 240, 140); g.addColorStop(0, sel ? 'rgba(224,102,42,.32)' : 'rgba(255,255,255,.05)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = g; c.fillRect(0, 0, 260, 300);
     const cyc = (gt * 0.7) % 3;
     const atk = sel && cyc < 0.25 ? 1 - cyc / 0.25 : 0;
-    drawChibi(c, 120, 205, {...CLASSES[k].look, style:k, weapon:CLASSES[k].weapon, scale:3, face:1, time:gt, walk:gt * 10, moving:sel && cyc > 1.5, atk});
+    const look = heroLook({cls:k, gender:selGender, eq:{weapon:{slot:'weapon', tier:1, q:0}}});
+    drawHero(c, 136, 288, {look, scale:2.75, face:1, time:gt, walk:gt * 9, moving:sel && cyc > 1.5, atk});
   }
 }
 function startGame(d){
@@ -1826,18 +2044,19 @@ function startGame(d){
   moveEnt(P, 0, 0); snapCam();
   buildSkillbar(); drawPortrait(); updateHUD();
   toast(map.name);
-  msg(`歡迎來到 Q萌英雄傳，${P.name}！`, '#ffe066');
+  msg(`歡迎來到 烈焰英雄傳，${P.name}！`, '#f3dca0');
   if(P.quest.i === 0 && !P.quest.acc) msg('先去找頭上有「!」的村長·老莫接任務吧！', '#9fe');
 }
 let overwriteArmed = false;
 $('bStart').onclick = () => {
-  let name = $('nameIn').value.trim() || ['小萌', '阿呆', '豆豆', '糖糖', '布丁'][randi(0, 4)] + CLASSES[selCls].name;
+  let name = $('nameIn').value.trim() || (selGender === 'female' ? ['凌霜', '夜歌', '緋月', '青嵐', '璃音'] : ['蒼炎', '凌風', '玄夜', '破軍', '寒鋒'])[randi(0, 4)];
   if(loadSave() && !overwriteArmed){ overwriteArmed = true; $('bStart').textContent = '會覆蓋現有存檔，再按一次確認'; $('bStart').classList.replace('g', 'r'); return; }
-  const p = newPlayer(name, selCls);
+  const p = newPlayer(name, selCls, selGender);
   startGame(p); save();
 };
 $('bCont').onclick = () => { const d = loadSave(); if(d) startGame(d); };
 buildCards();
+$('gender').querySelectorAll('button').forEach(b => b.onclick = () => { selGender = b.dataset.g; $('gender').querySelectorAll('button').forEach(x => x.classList.toggle('sel', x === b)); });
 { const d = loadSave(); if(d){ $('bCont').classList.remove('hidden'); $('bCont').textContent = `繼續遊戲（${d.name} Lv${d.lv}）`; } }
 
 /* ================= 主迴圈 ================= */
@@ -1854,5 +2073,5 @@ requestAnimationFrame(loop);
 addEventListener('beforeunload', save);
 document.addEventListener('visibilitychange', () => { if(document.hidden) save(); });
 // 測試用掛鉤
-window.__game = {get P(){ return P; }, get monsters(){ return monsters; }, loadMap:(id, x, y) => loadMap(id, x, y), gainExp, useSkill, toggleAuto};
+window.__game = {get P(){ return P; }, genItem, get monsters(){ return monsters; }, loadMap:(id, x, y) => loadMap(id, x, y), gainExp, useSkill, toggleAuto};
 </script>
